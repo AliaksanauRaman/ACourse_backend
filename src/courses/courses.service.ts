@@ -2,6 +2,8 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Pool } from 'pg';
 
 import { PG_POOL } from '../db/pg-pool';
+import { mapCourseDbRecordToCourse } from '../utils/map-course-db-record-to-course';
+import { CourseDbRecord } from '../types/course-db-record';
 import { Course } from '../types/course';
 import { CreateCourseDto } from '../types/create-course-dto';
 
@@ -12,21 +14,18 @@ export class CoursesService {
 
   async getAllCourses(): Promise<Array<Course>> {
     return this.dbPool
-      .query<Course>(
+      .query<CourseDbRecord>(
         `
         SELECT *
         FROM "${COURSES_TABLE_NAME}";
       `,
       )
-      .then(({ rows }) => rows)
-      .then(
-        (courses) => courses.map((course) => ({ ...course, lectures: [] })), // TODO
-      );
+      .then(({ rows }) => rows.map(mapCourseDbRecordToCourse));
   }
 
   async getCourseById(courseId: string): Promise<Course> {
     return this.dbPool
-      .query<Course>(
+      .query<CourseDbRecord>(
         `
         SELECT *
         FROM "${COURSES_TABLE_NAME}"
@@ -37,10 +36,7 @@ export class CoursesService {
       )
       .then(({ rowCount, rows }) => {
         if (rowCount === 1) {
-          return {
-            ...rows[0],
-            lectures: [], // TODO
-          };
+          return mapCourseDbRecordToCourse(rows[0]);
         }
 
         throw new NotFoundException('Course with provided id was not found!');
@@ -49,7 +45,7 @@ export class CoursesService {
 
   async createCourse(createCourseDto: CreateCourseDto): Promise<Course> {
     return this.dbPool
-      .query<Course>(
+      .query<CourseDbRecord>(
         `
         INSERT INTO "${COURSES_TABLE_NAME}" (title, description, want_to_improve)
         VALUES ($1, $2, $3)
@@ -61,15 +57,12 @@ export class CoursesService {
           createCourseDto.wantToImprove,
         ],
       )
-      .then(({ rows }) => ({
-        ...rows[0],
-        lectures: [], // TODO
-      }));
+      .then(({ rows }) => mapCourseDbRecordToCourse(rows[0]));
   }
 
   async deleteCourse(courseId: string): Promise<Course> {
     return this.dbPool
-      .query<Course>(
+      .query<CourseDbRecord>(
         `
           DELETE FROM "${COURSES_TABLE_NAME}"
           WHERE id=$1
@@ -79,10 +72,7 @@ export class CoursesService {
       )
       .then(({ rowCount, rows }) => {
         if (rowCount === 1) {
-          return {
-            ...rows[0],
-            lectures: [], // TODO
-          };
+          return mapCourseDbRecordToCourse(rows[0]);
         }
 
         throw new NotFoundException('Course with provided id was not found!');
