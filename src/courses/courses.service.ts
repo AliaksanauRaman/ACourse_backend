@@ -18,7 +18,10 @@ export class CoursesService {
         FROM "${COURSES_TABLE_NAME}";
       `,
       )
-      .then(({ rows }) => rows);
+      .then(({ rows }) => rows)
+      .then(
+        (courses) => courses.map((course) => ({ ...course, lectures: [] })), // TODO
+      );
   }
 
   async getCourseById(courseId: string): Promise<Course> {
@@ -32,14 +35,15 @@ export class CoursesService {
       `,
         [courseId],
       )
-      .then(({ rows }) => {
-        const firstRow = rows[0];
-
-        if (firstRow === undefined) {
-          throw new NotFoundException('Course with provided id was not found!');
+      .then(({ rowCount, rows }) => {
+        if (rowCount === 1) {
+          return {
+            ...rows[0],
+            lectures: [], // TODO
+          };
         }
 
-        return firstRow;
+        throw new NotFoundException('Course with provided id was not found!');
       });
   }
 
