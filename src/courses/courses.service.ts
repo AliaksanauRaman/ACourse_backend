@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Pool } from 'pg';
 
 import { PG_POOL } from '../db/constants';
-import { mapCourseDbRecordToCourse } from '../utils/map-course-db-record-to-course';
+import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course';
 import { CourseDbRecord } from './types/course-db-record';
 import { Course } from './types/course';
 import { CreateCourseDto } from './dtos/create-course.dto';
