@@ -1,16 +1,22 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Pool } from 'pg';
 
+import { LecturesService } from './lectures.service';
+
 import { PG_POOL } from '../db/constants';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course';
 import { CourseDbRecord } from './types/course-db-record';
 import { Course } from './types/course';
 import { CreateCourseDto } from './dtos/create-course.dto';
 import { COURSES_TABLE_NAME } from './courses.config';
+import { mapLectureDbRecordToLecture } from './utils/map-lecture-db-record-to-lecture';
 
 @Injectable()
 export class CoursesService {
-  constructor(@Inject(PG_POOL) private readonly dbPool: Pool) {}
+  constructor(
+    @Inject(PG_POOL) private readonly dbPool: Pool,
+    private readonly lecturesService: LecturesService,
+  ) {}
 
   async getAllCourses(): Promise<Array<Course>> {
     return this.dbPool
@@ -44,20 +50,30 @@ export class CoursesService {
   }
 
   async createCourse(createCourseDto: CreateCourseDto): Promise<Course> {
-    return this.dbPool
-      .query<CourseDbRecord>(
-        `
+    const {
+      rows: [createdCourse],
+    } = await this.dbPool.query<CourseDbRecord>(
+      `
         INSERT INTO "${COURSES_TABLE_NAME}" (title, description, want_to_improve)
         VALUES ($1, $2, $3)
         RETURNING *;
       `,
-        [
-          createCourseDto.title,
-          createCourseDto.description,
-          createCourseDto.wantToImprove,
-        ],
-      )
-      .then(({ rows }) => mapCourseDbRecordToCourse(rows[0]));
+      [
+        createCourseDto.title,
+        createCourseDto.description,
+        createCourseDto.wantToImprove,
+      ],
+    );
+
+    const lecturesDbRecords = await this.lecturesService.createCourseLectures(
+      createdCourse.id,
+      createCourseDto.lectures,
+    );
+
+    return {
+      ...mapCourseDbRecordToCourse(createdCourse),
+      lectures: lecturesDbRecords.map(mapLectureDbRecordToLecture),
+    };
   }
 
   async deleteCourse(courseId: string): Promise<Course> {
