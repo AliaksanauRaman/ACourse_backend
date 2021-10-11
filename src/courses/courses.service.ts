@@ -3,11 +3,11 @@ import { Pool } from 'pg';
 
 import { PG_POOL } from '../db/constants';
 import { mapCourseDbRecordToCourse } from '../utils/map-course-db-record-to-course';
-import { CourseDbRecord } from '../types/course-db-record';
-import { Course } from '../types/course';
-import { CreateCourseDto } from '../types/create-course-dto';
+import { CourseDbRecord } from './types/course-db-record';
+import { Course } from './types/course';
+import { CreateCourseDto } from './dtos/create-course.dto';
+import { COURSES_TABLE_NAME } from './courses.config';
 
-const COURSES_TABLE_NAME = 'Courses';
 @Injectable()
 export class CoursesService {
   constructor(@Inject(PG_POOL) private readonly dbPool: Pool) {}
