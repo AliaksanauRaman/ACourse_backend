@@ -7,7 +7,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Pool } from 'pg';
 
-import { PG_POOL } from './pg-pool';
+import { PG_POOL } from './constants';
 
 const dbProvider: FactoryProvider<Pool> = {
   provide: PG_POOL,
