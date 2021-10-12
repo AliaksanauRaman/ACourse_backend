@@ -8,6 +8,7 @@ import { CreateCourseDto } from './dtos/create-course.dto';
 import { mapLectureDbRecordToLecture } from './utils/map-lecture-db-record-to-lecture';
 import { Lecture } from './types/lecture';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course';
+import { CreateLectureDto } from './dtos/create-lecture.dto';
 
 @Controller('courses')
 export class CoursesController {
@@ -50,6 +51,18 @@ export class CoursesController {
       createCourseDto,
     );
     return mapCourseDbRecordToCourse(courseAddedToDb);
+  }
+
+  @Post('/:courseId/lectures')
+  async handleCreateCourseLecture(
+    @Param('courseId') courseId: string,
+    @Body() createLectureDto: CreateLectureDto,
+  ): Promise<Lecture> {
+    const lectureAddedToDb = await this.lecturesService.addLectureToDb(
+      courseId,
+      createLectureDto,
+    );
+    return mapLectureDbRecordToLecture(lectureAddedToDb);
   }
 
   @Delete('/:courseId')

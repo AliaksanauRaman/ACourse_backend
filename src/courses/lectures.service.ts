@@ -43,6 +43,19 @@ export class LecturesService {
     courseId: string,
     createLectureDto: CreateLectureDto,
   ): Promise<LectureDbRecord> {
-    return null;
+    return this.dbPool
+      .query<LectureDbRecord>(
+        `
+          INSERT INTO "${LECTURES_TABLE_NAME}" (
+            course_id,
+            title,
+            description
+          )
+          VALUES ($1, $2, $3)
+          RETURNING *;
+        `,
+        [courseId, createLectureDto.title, createLectureDto.description],
+      )
+      .then(({ rows: [createdLecture] }) => createdLecture);
   }
 }
