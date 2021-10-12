@@ -3,6 +3,6 @@ export type Course = {
   readonly title: string;
   readonly description: string;
   readonly wantToImprove: boolean;
-  readonly createdAt: Date; // TODO: Check
-  readonly modifiedAt: Date; // TODO: Check
+  readonly createdAt: Date;
+  readonly modifiedAt: Date;
 };
