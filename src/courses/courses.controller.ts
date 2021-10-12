@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 
 import { CoursesService } from './courses.service';
 import { LecturesService } from './lectures.service';
@@ -9,6 +17,7 @@ import { mapLectureDbRecordToLecture } from './utils/map-lecture-db-record-to-le
 import { Lecture } from './types/lecture';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course';
 import { CreateLectureDto } from './dtos/create-lecture.dto';
+import { UUID_VERSION } from '../constants';
 
 @Controller('courses')
 export class CoursesController {
@@ -26,7 +35,8 @@ export class CoursesController {
   // TODO: Check if needed
   @Get('/:courseId')
   async handleGetCourseById(
-    @Param('courseId') courseId: string,
+    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    courseId: string,
   ): Promise<Course> {
     const courseFromDb = await this.coursesService.getCourseByIdFromDb(
       courseId,
@@ -36,7 +46,8 @@ export class CoursesController {
 
   @Get('/:courseId/lectures')
   async handleGetAllCourseLectures(
-    @Param('courseId') courseId: string,
+    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    courseId: string,
   ): Promise<Array<Lecture>> {
     const lecturesFromDb =
       await this.lecturesService.getAllCourseLecturesFromDb(courseId);
@@ -55,7 +66,8 @@ export class CoursesController {
 
   @Post('/:courseId/lectures')
   async handleCreateCourseLecture(
-    @Param('courseId') courseId: string,
+    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    courseId: string,
     @Body() createLectureDto: CreateLectureDto,
   ): Promise<Lecture> {
     const lectureAddedToDb = await this.lecturesService.addLectureToDb(
@@ -67,7 +79,8 @@ export class CoursesController {
 
   @Delete('/:courseId')
   async handleDeleteCourse(
-    @Param('courseId') courseId: string,
+    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    courseId: string,
   ): Promise<Course> {
     const deletedCourseFromDb = await this.coursesService.deleteCourseFromDb(
       courseId,
