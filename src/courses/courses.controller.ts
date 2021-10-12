@@ -1,37 +1,64 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 
 import { CoursesService } from './courses.service';
+import { LecturesService } from './lectures.service';
 
 import { Course } from './types/course';
 import { CreateCourseDto } from './dtos/create-course.dto';
+import { mapLectureDbRecordToLecture } from './utils/map-lecture-db-record-to-lecture';
+import { Lecture } from './types/lecture';
+import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course';
 
 @Controller('courses')
 export class CoursesController {
-  constructor(private readonly coursesService: CoursesService) {}
+  constructor(
+    private readonly coursesService: CoursesService,
+    private readonly lecturesService: LecturesService,
+  ) {}
 
   @Get('/')
   async handleGetAllCourses(): Promise<Array<Course>> {
-    return this.coursesService.getAllCourses();
+    const coursesFromDb = await this.coursesService.getAllCoursesFromDb();
+    return coursesFromDb.map(mapCourseDbRecordToCourse);
   }
 
+  // TODO: Check if needed
   @Get('/:courseId')
   async handleGetCourseById(
     @Param('courseId') courseId: string,
   ): Promise<Course> {
-    return this.coursesService.getCourseById(courseId);
+    const courseFromDb = await this.coursesService.getCourseByIdFromDb(
+      courseId,
+    );
+    return mapCourseDbRecordToCourse(courseFromDb);
+  }
+
+  @Get('/:courseId/lectures')
+  async handleGetAllCourseLectures(
+    @Param('courseId') courseId: string,
+  ): Promise<Array<Lecture>> {
+    const lecturesFromDb =
+      await this.lecturesService.getAllCourseLecturesFromDb(courseId);
+    return lecturesFromDb.map(mapLectureDbRecordToLecture);
   }
 
   @Post('/')
   async handleCreateCourse(
     @Body() createCourseDto: CreateCourseDto,
   ): Promise<Course> {
-    return this.coursesService.createCourse(createCourseDto);
+    const courseAddedToDb = await this.coursesService.addCourseToDb(
+      createCourseDto,
+    );
+    return mapCourseDbRecordToCourse(courseAddedToDb);
   }
 
   @Delete('/:courseId')
   async handleDeleteCourse(
     @Param('courseId') courseId: string,
   ): Promise<Course> {
-    return this.coursesService.deleteCourse(courseId);
+    const deletedCourseFromDb = await this.coursesService.deleteCourseFromDb(
+      courseId,
+    );
+    return mapCourseDbRecordToCourse(deletedCourseFromDb);
   }
 }

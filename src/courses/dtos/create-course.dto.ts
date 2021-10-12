@@ -1,13 +1,4 @@
-import {
-  IsArray,
-  IsBoolean,
-  IsNotEmpty,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
-import { Type } from 'class-transformer';
-
-import { CreateLectureDto } from './create-lecture.dto';
+import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateCourseDto {
   @IsString()
@@ -20,9 +11,4 @@ export class CreateCourseDto {
 
   @IsBoolean()
   readonly wantToImprove: boolean;
-
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CreateLectureDto)
-  readonly lectures: Array<CreateLectureDto>;
 }
