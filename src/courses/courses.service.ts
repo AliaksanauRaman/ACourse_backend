@@ -6,6 +6,7 @@ import { mapCourseDbRecordToCourse } from '../utils/map-course-db-record-to-cour
 import { CourseDbRecord } from '../types/course-db-record';
 import { Course } from '../types/course';
 import { CreateCourseDto } from '../types/create-course-dto';
+import { constructUpdateQuery } from 'src/utils/construct-update-query';
 
 const COURSES_TABLE_NAME = 'Courses';
 @Injectable()
@@ -58,6 +59,30 @@ export class CoursesService {
         ],
       )
       .then(({ rows }) => mapCourseDbRecordToCourse(rows[0]));
+  }
+
+  // TODO: modifyCourseDto must have at least one field
+  // TODO: Modify lectures here?
+  async modifyCourse(
+    courseId: string,
+    modifyCourseDto: Partial<CreateCourseDto>,
+  ): Promise<any> {
+    return this.dbPool
+      .query<CourseDbRecord>(
+        constructUpdateQuery({
+          tableName: COURSES_TABLE_NAME,
+          modifyDto: modifyCourseDto,
+          rowId: courseId,
+        }),
+        Object.values(modifyCourseDto),
+      )
+      .then(({ rowCount, rows }) => {
+        if (rowCount === 1) {
+          return mapCourseDbRecordToCourse(rows[0]);
+        }
+
+        throw new NotFoundException('Course with provided id was not found!');
+      });
   }
 
   async deleteCourse(courseId: string): Promise<Course> {
