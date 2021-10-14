@@ -87,4 +87,18 @@ export class CoursesController {
     );
     return mapCourseDbRecordToCourse(deletedCourseFromDb);
   }
+
+  @Delete('/:courseId/lectures/:lectureId')
+  async handleDeleteCourseLecture(
+    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    courseId: string,
+    @Param('lectureId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    lectureId: string,
+  ): Promise<Lecture> {
+    const deletedLectureFromDb = await this.lecturesService.deleteLectureFromDb(
+      courseId,
+      lectureId,
+    );
+    return mapLectureDbRecordToLecture(deletedLectureFromDb);
+  }
 }

@@ -41,7 +41,7 @@ export class CoursesService {
           return rows[0];
         }
 
-        throw new NotFoundException('Course with provided id was not found!');
+        throw new NotFoundException('Course was not found!');
       });
   }
 
@@ -74,7 +74,8 @@ export class CoursesService {
         `
           DELETE FROM
             "${COURSES_TABLE_NAME}"
-          WHERE id=$1
+          WHERE
+            id=$1
           RETURNING *;
         `,
         [courseId],
@@ -84,7 +85,7 @@ export class CoursesService {
           return rows[0];
         }
 
-        throw new NotFoundException('Course with provided id was not found!');
+        throw new NotFoundException('Course was not found!');
       });
   }
 }

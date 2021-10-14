@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Pool } from 'pg';
 
 import { PG_POOL } from '../db/constants';
@@ -57,5 +57,31 @@ export class LecturesService {
         [courseId, createLectureDto.title, createLectureDto.description],
       )
       .then(({ rows: [createdLecture] }) => createdLecture);
+  }
+
+  async deleteLectureFromDb(
+    courseId: string,
+    lectureId: string,
+  ): Promise<LectureDbRecord> {
+    return this.dbPool
+      .query<LectureDbRecord>(
+        `
+          DELETE FROM
+            "${LECTURES_TABLE_NAME}"
+          WHERE
+            course_id=$1
+          AND
+            id=$2
+          RETURNING *;
+        `,
+        [courseId, lectureId],
+      )
+      .then(({ rows, rowCount }) => {
+        if (rowCount === 1) {
+          return rows[0];
+        }
+
+        throw new NotFoundException('Lecture was not found!');
+      });
   }
 }
