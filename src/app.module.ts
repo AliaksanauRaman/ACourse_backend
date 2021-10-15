@@ -17,7 +17,7 @@ import { AppService } from './app.service';
         config: {
           accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),
           secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
-          region: 'us-east-1',
+          region: configService.get('AWS_REGION'),
           s3ForcePathStyle: true,
           signatureVersion: 'v4',
         },
