@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { S3Module } from 'nestjs-s3';
+import { StorageService } from './storage.service';
 
 @Module({
   imports: [
@@ -18,8 +19,8 @@ import { S3Module } from 'nestjs-s3';
       inject: [ConfigService],
     }),
   ],
-  exports: [],
-  providers: [],
+  exports: [StorageService],
+  providers: [StorageService],
   controllers: [],
 })
 export class StorageModule {}
