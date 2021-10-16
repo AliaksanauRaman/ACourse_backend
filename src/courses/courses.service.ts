@@ -4,7 +4,7 @@ import { Pool } from 'pg';
 import { DB_POOL } from '../db/constants';
 import { CourseDbRecord } from './types/course-db-record';
 import { CreateCourseDto } from './dtos/create-course.dto';
-import { COURSES_TABLE_NAME } from './courses.config';
+import { COURSES_TABLE_NAME, LECTURES_TABLE_NAME } from './courses.config';
 
 @Injectable()
 export class CoursesService {
@@ -87,5 +87,28 @@ export class CoursesService {
 
         throw new NotFoundException('Course was not found!');
       });
+  }
+
+  async checkIfCourseHasLecture(
+    courseId: string,
+    lectureId: string,
+  ): Promise<boolean> {
+    return this.dbPool
+      .query<{ exists: boolean }>(
+        `
+          SELECT EXISTS (
+            SELECT
+              true
+            FROM
+              "${LECTURES_TABLE_NAME}"
+            WHERE
+              course_id=$1
+            AND
+              id=$2
+          );
+      `,
+        [courseId, lectureId],
+      )
+      .then(({ rows: [{ exists }] }) => exists);
   }
 }
