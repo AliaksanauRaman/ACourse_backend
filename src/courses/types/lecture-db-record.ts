@@ -11,6 +11,7 @@ export type LectureDbRecord = {
   readonly modified_at: Date;
 };
 
+// TODO: Not used
 export const isLectureDbRecord = (value: unknown): value is LectureDbRecord =>
   isObject(value) &&
   isString(value.id) &&

@@ -7,10 +7,10 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Pool } from 'pg';
 
-import { PG_POOL } from './constants';
+import { DB_POOL } from './constants';
 
 const dbProvider: FactoryProvider<Pool> = {
-  provide: PG_POOL,
+  provide: DB_POOL,
   useFactory: (configService: ConfigService) => {
     return new Pool({
       connectionString: configService.get('DATABASE_URL'),
@@ -27,7 +27,7 @@ const dbProvider: FactoryProvider<Pool> = {
   exports: [dbProvider],
 })
 export class DbModule implements OnModuleDestroy {
-  constructor(@Inject(PG_POOL) private readonly dbPool: Pool) {}
+  constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
   onModuleDestroy(): void {
     this.dbPool.end();
