@@ -1,14 +1,14 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Pool } from 'pg';
 
-import { PG_POOL } from '../db/constants';
+import { DB_POOL } from '../db/constants';
 import { CreateLectureDto } from './dtos/create-lecture.dto';
 import { COURSES_TABLE_NAME, LECTURES_TABLE_NAME } from './courses.config';
 import { LectureDbRecord } from './types/lecture-db-record';
 
 @Injectable()
 export class LecturesService {
-  constructor(@Inject(PG_POOL) private readonly dbPool: Pool) {}
+  constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
   async getAllCourseLecturesFromDb(
     courseId: string,
