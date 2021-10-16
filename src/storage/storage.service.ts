@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { S3 } from 'aws-sdk';
 import { InjectS3 } from 'nestjs-s3';
 
-const LECTURES_FILES_BUCKET_NAME = 'acourse-backend-files-store';
+const LECTURES_FILES_BUCKET_NAME = 'acourse-lectrues-files';
 
 @Injectable()
 export class StorageService {
