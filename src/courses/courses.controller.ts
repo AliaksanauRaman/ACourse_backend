@@ -7,6 +7,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  StreamableFile,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -41,7 +42,6 @@ export class CoursesController {
     return coursesFromDb.map(mapCourseDbRecordToCourse);
   }
 
-  // TODO: Check if needed
   @Get('/:courseId')
   async handleGetCourseById(
     @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
@@ -61,6 +61,29 @@ export class CoursesController {
     const lecturesFromDb =
       await this.lecturesService.getAllCourseLecturesFromDb(courseId);
     return lecturesFromDb.map(mapLectureDbRecordToLecture);
+  }
+
+  @Get('/:courseId/lectures/:lectureId/get-file/:fileId')
+  async handleGetOfCourseLectureFile(
+    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    courseId: string,
+    @Param('lectureId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    lectureId: string,
+    @Param('fileId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    fileId: string,
+  ): Promise<StreamableFile> {
+    const courseHasLecture = await this.coursesService.checkIfCourseHasLecture(
+      courseId,
+      lectureId,
+    );
+
+    if (!courseHasLecture) {
+      throw new NotFoundException(
+        'Chosen course does not have a lecture with provided id!',
+      );
+    }
+
+    return this.storageService.getLectureFile(fileId);
   }
 
   @Post('/')
@@ -86,9 +109,9 @@ export class CoursesController {
     return mapLectureDbRecordToLecture(lectureAddedToDb);
   }
 
-  @Post('/:courseId/lectures/:lectureId/upload-a-file')
+  @Post('/:courseId/lectures/:lectureId/upload-file')
   @UseInterceptors(FileInterceptor('file'))
-  async handleCourseLectureFileUpload(
+  async handleUploadOfCourseLectureFile(
     @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
     courseId: string,
     @Param('lectureId', new ParseUUIDPipe({ version: UUID_VERSION }))
