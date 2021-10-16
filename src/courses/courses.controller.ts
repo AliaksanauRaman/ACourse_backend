@@ -3,13 +3,19 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 import { CoursesService } from './courses.service';
 import { LecturesService } from './lectures.service';
+import { FilesDbService } from '../files/files-db.service';
+import { StorageService } from '../storage/storage.service';
 
 import { Course } from './types/course';
 import { CreateCourseDto } from './dtos/create-course.dto';
@@ -18,12 +24,15 @@ import { Lecture } from './types/lecture';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course';
 import { CreateLectureDto } from './dtos/create-lecture.dto';
 import { UUID_VERSION } from '../constants';
+import { UploadLectureFileResponse } from './types/result-of-upload-a-lecture-file';
 
 @Controller('courses')
 export class CoursesController {
   constructor(
     private readonly coursesService: CoursesService,
     private readonly lecturesService: LecturesService,
+    private readonly filesDbService: FilesDbService,
+    private readonly storageService: StorageService,
   ) {}
 
   @Get('/')
@@ -75,6 +84,35 @@ export class CoursesController {
       createLectureDto,
     );
     return mapLectureDbRecordToLecture(lectureAddedToDb);
+  }
+
+  @Post('/:courseId/lectures/:lectureId/upload-a-file')
+  @UseInterceptors(FileInterceptor('file'))
+  async handleCourseLectureFileUpload(
+    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    courseId: string,
+    @Param('lectureId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    lectureId: string,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<UploadLectureFileResponse> {
+    const courseHasLecture = await this.coursesService.checkIfCourseHasLecture(
+      courseId,
+      lectureId,
+    );
+
+    if (!courseHasLecture) {
+      throw new NotFoundException(
+        'Chosen course does not have a lecture with provided id!',
+      );
+    }
+
+    const lectureFileDbRecord =
+      await this.filesDbService.insertLectureFileRecord(lectureId, file);
+    const uploadedFileid = await this.storageService.saveLectureFile(
+      lectureFileDbRecord.id,
+      file.buffer,
+    );
+    return { uploadedFileid };
   }
 
   @Delete('/:courseId')
