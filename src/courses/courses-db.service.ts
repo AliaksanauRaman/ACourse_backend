@@ -8,7 +8,7 @@ import { COURSES_TABLE_NAME, LECTURES_TABLE_NAME } from './courses.config';
 import { ModifyCourseDto } from './dtos/modify-course.dto';
 
 @Injectable()
-export class CoursesService {
+export class CoursesDbService {
   constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
   async getAllCoursesFromDb(): Promise<Array<CourseDbRecord>> {

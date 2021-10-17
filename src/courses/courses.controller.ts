@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { CoursesService } from './courses.service';
+import { CoursesDbService } from './courses-db.service';
 import { LecturesService } from './lectures.service';
 import { FilesDbService } from '../files/files-db.service';
 import { StorageService } from '../storage/storage.service';
@@ -32,7 +32,7 @@ import { ModifyCourseDto } from './dtos/modify-course.dto';
 @Controller('courses')
 export class CoursesController {
   constructor(
-    private readonly coursesService: CoursesService,
+    private readonly coursesDbService: CoursesDbService,
     private readonly lecturesService: LecturesService,
     private readonly filesDbService: FilesDbService,
     private readonly storageService: StorageService,
@@ -40,7 +40,7 @@ export class CoursesController {
 
   @Get('/')
   async handleGetAllCourses(): Promise<Array<Course>> {
-    const coursesFromDb = await this.coursesService.getAllCoursesFromDb();
+    const coursesFromDb = await this.coursesDbService.getAllCoursesFromDb();
     return coursesFromDb.map(mapCourseDbRecordToCourse);
   }
 
@@ -49,7 +49,7 @@ export class CoursesController {
     @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
     courseId: string,
   ): Promise<Course> {
-    const courseFromDb = await this.coursesService.getCourseByIdFromDb(
+    const courseFromDb = await this.coursesDbService.getCourseByIdFromDb(
       courseId,
     );
     return mapCourseDbRecordToCourse(courseFromDb);
@@ -74,10 +74,8 @@ export class CoursesController {
     @Param('fileId', new ParseUUIDPipe({ version: UUID_VERSION }))
     fileId: string,
   ): Promise<StreamableFile> {
-    const courseHasLecture = await this.coursesService.checkIfCourseHasLecture(
-      courseId,
-      lectureId,
-    );
+    const courseHasLecture =
+      await this.coursesDbService.checkIfCourseHasLecture(courseId, lectureId);
 
     if (!courseHasLecture) {
       throw new NotFoundException(
@@ -92,7 +90,7 @@ export class CoursesController {
   async handleCreateCourse(
     @Body() createCourseDto: CreateCourseDto,
   ): Promise<Course> {
-    const courseAddedToDb = await this.coursesService.addCourseToDb(
+    const courseAddedToDb = await this.coursesDbService.addCourseToDb(
       createCourseDto,
     );
     return mapCourseDbRecordToCourse(courseAddedToDb);
@@ -120,10 +118,8 @@ export class CoursesController {
     lectureId: string,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<UploadLectureFileResponse> {
-    const courseHasLecture = await this.coursesService.checkIfCourseHasLecture(
-      courseId,
-      lectureId,
-    );
+    const courseHasLecture =
+      await this.coursesDbService.checkIfCourseHasLecture(courseId, lectureId);
 
     if (!courseHasLecture) {
       throw new NotFoundException(
@@ -146,7 +142,7 @@ export class CoursesController {
     courseId: string,
     @Body() modifyCourseDto: ModifyCourseDto,
   ): Promise<Course> {
-    const modifiedCourseFromDb = await this.coursesService.modifyCourse(
+    const modifiedCourseFromDb = await this.coursesDbService.modifyCourse(
       courseId,
       modifyCourseDto,
     );
@@ -158,7 +154,7 @@ export class CoursesController {
     @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
     courseId: string,
   ): Promise<Course> {
-    const deletedCourseFromDb = await this.coursesService.deleteCourseFromDb(
+    const deletedCourseFromDb = await this.coursesDbService.deleteCourseFromDb(
       courseId,
     );
     return mapCourseDbRecordToCourse(deletedCourseFromDb);
