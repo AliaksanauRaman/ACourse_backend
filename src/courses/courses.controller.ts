@@ -60,9 +60,9 @@ export class CoursesController {
     @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
     courseId: string,
   ): Promise<Array<Lecture>> {
-    const lecturesFromDb =
-      await this.lecturesDbService.getAllCourseLecturesFromDb(courseId);
-    return lecturesFromDb.map(mapLectureDbRecordToLecture);
+    const courseLecturesDbRecords =
+      await this.lecturesDbService.selectAllCourseLectures(courseId);
+    return courseLecturesDbRecords.map(mapLectureDbRecordToLecture);
   }
 
   @Get('/:courseId/lectures/:lectureId/get-file/:fileId')
@@ -90,10 +90,10 @@ export class CoursesController {
   async handleCreateCourse(
     @Body() createCourseDto: CreateCourseDto,
   ): Promise<Course> {
-    const courseAddedToDb = await this.coursesDbService.insertCourse(
+    const insertedCourseDbRecord = await this.coursesDbService.insertCourse(
       createCourseDto,
     );
-    return mapCourseDbRecordToCourse(courseAddedToDb);
+    return mapCourseDbRecordToCourse(insertedCourseDbRecord);
   }
 
   @Post('/:courseId/lectures')
@@ -102,11 +102,11 @@ export class CoursesController {
     courseId: string,
     @Body() createLectureDto: CreateLectureDto,
   ): Promise<Lecture> {
-    const lectureAddedToDb = await this.lecturesDbService.addLectureToDb(
+    const insertedLectureDbRecord = await this.lecturesDbService.insertLecture(
       courseId,
       createLectureDto,
     );
-    return mapLectureDbRecordToLecture(lectureAddedToDb);
+    return mapLectureDbRecordToLecture(insertedLectureDbRecord);
   }
 
   @Post('/:courseId/lectures/:lectureId/upload-file')
@@ -167,8 +167,10 @@ export class CoursesController {
     @Param('lectureId', new ParseUUIDPipe({ version: UUID_VERSION }))
     lectureId: string,
   ): Promise<Lecture> {
-    const deletedLectureFromDb =
-      await this.lecturesDbService.deleteLectureFromDb(courseId, lectureId);
-    return mapLectureDbRecordToLecture(deletedLectureFromDb);
+    const deletedLectureDbRecord = await this.lecturesDbService.deleteLecture(
+      courseId,
+      lectureId,
+    );
+    return mapLectureDbRecordToLecture(deletedLectureDbRecord);
   }
 }

@@ -10,7 +10,7 @@ import { LectureDbRecord } from './types/lecture-db-record';
 export class LecturesDbService {
   constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
-  async getAllCourseLecturesFromDb(
+  async selectAllCourseLectures(
     courseId: string,
   ): Promise<Array<LectureDbRecord>> {
     return this.dbPool
@@ -39,7 +39,7 @@ export class LecturesDbService {
       .then(({ rows }) => rows);
   }
 
-  async addLectureToDb(
+  async insertLecture(
     courseId: string,
     createLectureDto: CreateLectureDto,
   ): Promise<LectureDbRecord> {
@@ -59,7 +59,7 @@ export class LecturesDbService {
       .then(({ rows: [createdLecture] }) => createdLecture);
   }
 
-  async deleteLectureFromDb(
+  async deleteLecture(
     courseId: string,
     lectureId: string,
   ): Promise<LectureDbRecord> {
