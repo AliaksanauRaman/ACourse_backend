@@ -40,8 +40,8 @@ export class CoursesController {
 
   @Get('/')
   async handleGetAllCourses(): Promise<Array<Course>> {
-    const coursesFromDb = await this.coursesDbService.getAllCoursesFromDb();
-    return coursesFromDb.map(mapCourseDbRecordToCourse);
+    const coursesDbRecords = await this.coursesDbService.selectAllCourses();
+    return coursesDbRecords.map(mapCourseDbRecordToCourse);
   }
 
   @Get('/:courseId')
@@ -49,10 +49,10 @@ export class CoursesController {
     @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
     courseId: string,
   ): Promise<Course> {
-    const courseFromDb = await this.coursesDbService.getCourseByIdFromDb(
+    const courseDbRecord = await this.coursesDbService.selectCourseById(
       courseId,
     );
-    return mapCourseDbRecordToCourse(courseFromDb);
+    return mapCourseDbRecordToCourse(courseDbRecord);
   }
 
   @Get('/:courseId/lectures')
@@ -90,7 +90,7 @@ export class CoursesController {
   async handleCreateCourse(
     @Body() createCourseDto: CreateCourseDto,
   ): Promise<Course> {
-    const courseAddedToDb = await this.coursesDbService.addCourseToDb(
+    const courseAddedToDb = await this.coursesDbService.insertCourse(
       createCourseDto,
     );
     return mapCourseDbRecordToCourse(courseAddedToDb);
@@ -142,11 +142,11 @@ export class CoursesController {
     courseId: string,
     @Body() modifyCourseDto: ModifyCourseDto,
   ): Promise<Course> {
-    const modifiedCourseFromDb = await this.coursesDbService.modifyCourse(
+    const modifiedCourseDbRecord = await this.coursesDbService.modifyCourse(
       courseId,
       modifyCourseDto,
     );
-    return mapCourseDbRecordToCourse(modifiedCourseFromDb);
+    return mapCourseDbRecordToCourse(modifiedCourseDbRecord);
   }
 
   @Delete('/:courseId')
@@ -154,10 +154,10 @@ export class CoursesController {
     @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
     courseId: string,
   ): Promise<Course> {
-    const deletedCourseFromDb = await this.coursesDbService.deleteCourseFromDb(
+    const deletedCourseDbRecord = await this.coursesDbService.deleteCourse(
       courseId,
     );
-    return mapCourseDbRecordToCourse(deletedCourseFromDb);
+    return mapCourseDbRecordToCourse(deletedCourseDbRecord);
   }
 
   @Delete('/:courseId/lectures/:lectureId')

@@ -11,7 +11,7 @@ import { ModifyCourseDto } from './dtos/modify-course.dto';
 export class CoursesDbService {
   constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
-  async getAllCoursesFromDb(): Promise<Array<CourseDbRecord>> {
+  async selectAllCourses(): Promise<Array<CourseDbRecord>> {
     return this.dbPool
       .query<CourseDbRecord>(
         `
@@ -24,7 +24,7 @@ export class CoursesDbService {
       .then(({ rows }) => rows);
   }
 
-  async getCourseByIdFromDb(courseId: string): Promise<CourseDbRecord> {
+  async selectCourseById(courseId: string): Promise<CourseDbRecord> {
     return this.dbPool
       .query<CourseDbRecord>(
         `
@@ -46,7 +46,7 @@ export class CoursesDbService {
       });
   }
 
-  async addCourseToDb(
+  async insertCourse(
     createCourseDto: CreateCourseDto,
   ): Promise<CourseDbRecord> {
     return this.dbPool
@@ -69,7 +69,7 @@ export class CoursesDbService {
       .then(({ rows: [createdCourse] }) => createdCourse);
   }
 
-  async deleteCourseFromDb(courseId: string): Promise<CourseDbRecord> {
+  async deleteCourse(courseId: string): Promise<CourseDbRecord> {
     return this.dbPool
       .query<CourseDbRecord>(
         `
