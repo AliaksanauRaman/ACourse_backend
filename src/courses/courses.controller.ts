@@ -5,7 +5,6 @@ import {
   Get,
   NotFoundException,
   Param,
-  ParseUUIDPipe,
   Post,
   Put,
   StreamableFile,
@@ -25,7 +24,7 @@ import { mapLectureDbRecordToLecture } from './utils/map-lecture-db-record-to-le
 import { Lecture } from './types/lecture';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course';
 import { CreateLectureDto } from './dtos/create-lecture.dto';
-import { UUID_VERSION } from '../constants';
+import { UUIDValidatorPipe } from '../shared/pipes/uuid-validator';
 import { UploadLectureFileResponse } from './types/result-of-upload-a-lecture-file';
 import { ModifyCourseDto } from './dtos/modify-course.dto';
 
@@ -46,7 +45,7 @@ export class CoursesController {
 
   @Get('/:courseId')
   async handleGetCourseById(
-    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    @Param('courseId', UUIDValidatorPipe)
     courseId: string,
   ): Promise<Course> {
     const courseDbRecord = await this.coursesDbService.selectCourseById(
@@ -57,7 +56,7 @@ export class CoursesController {
 
   @Get('/:courseId/lectures')
   async handleGetAllCourseLectures(
-    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    @Param('courseId', UUIDValidatorPipe)
     courseId: string,
   ): Promise<Array<Lecture>> {
     const courseLecturesDbRecords =
@@ -67,11 +66,11 @@ export class CoursesController {
 
   @Get('/:courseId/lectures/:lectureId/get-file/:fileId')
   async handleGetOfCourseLectureFile(
-    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    @Param('courseId', UUIDValidatorPipe)
     courseId: string,
-    @Param('lectureId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    @Param('lectureId', UUIDValidatorPipe)
     lectureId: string,
-    @Param('fileId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    @Param('fileId', UUIDValidatorPipe)
     fileId: string,
   ): Promise<StreamableFile> {
     const courseHasLecture =
@@ -98,7 +97,7 @@ export class CoursesController {
 
   @Post('/:courseId/lectures')
   async handleCreateCourseLecture(
-    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    @Param('courseId', UUIDValidatorPipe)
     courseId: string,
     @Body() createLectureDto: CreateLectureDto,
   ): Promise<Lecture> {
@@ -112,9 +111,9 @@ export class CoursesController {
   @Post('/:courseId/lectures/:lectureId/upload-file')
   @UseInterceptors(FileInterceptor('file'))
   async handleUploadOfCourseLectureFile(
-    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    @Param('courseId', UUIDValidatorPipe)
     courseId: string,
-    @Param('lectureId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    @Param('lectureId', UUIDValidatorPipe)
     lectureId: string,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<UploadLectureFileResponse> {
@@ -138,7 +137,7 @@ export class CoursesController {
 
   @Put('/:courseId')
   async handleModifyCourse(
-    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    @Param('courseId', UUIDValidatorPipe)
     courseId: string,
     @Body() modifyCourseDto: ModifyCourseDto,
   ): Promise<Course> {
@@ -151,7 +150,7 @@ export class CoursesController {
 
   @Delete('/:courseId')
   async handleDeleteCourse(
-    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    @Param('courseId', UUIDValidatorPipe)
     courseId: string,
   ): Promise<Course> {
     const deletedCourseDbRecord = await this.coursesDbService.deleteCourse(
@@ -162,9 +161,9 @@ export class CoursesController {
 
   @Delete('/:courseId/lectures/:lectureId')
   async handleDeleteCourseLecture(
-    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    @Param('courseId', UUIDValidatorPipe)
     courseId: string,
-    @Param('lectureId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    @Param('lectureId', UUIDValidatorPipe)
     lectureId: string,
   ): Promise<Lecture> {
     const deletedLectureDbRecord = await this.lecturesDbService.deleteLecture(
