@@ -82,6 +82,7 @@ export class CoursesController {
       );
     }
 
+    // TODO: Lecture has the file?
     return this.storageService.getLectureFile(fileId);
   }
 

@@ -8,6 +8,7 @@ import { LectureDbRecord } from './types/lecture-db-record';
 
 @Injectable()
 export class LecturesDbService {
+  // TODO: Add modify lecture functionality
   constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
   async selectAllCourseLectures(
