@@ -5,6 +5,7 @@ import { DB_POOL } from '../db/constants';
 import { CourseDbRecord } from './types/course-db-record';
 import { CreateCourseDto } from './dtos/create-course.dto';
 import { COURSES_TABLE_NAME, LECTURES_TABLE_NAME } from './courses.config';
+import { ModifyCourseDto } from './dtos/modify-course.dto';
 
 @Injectable()
 export class CoursesService {
@@ -110,5 +111,32 @@ export class CoursesService {
         [courseId, lectureId],
       )
       .then(({ rows: [{ exists }] }) => exists);
+  }
+
+  async modifyCourse(
+    courseId: string,
+    modifyCourseDto: ModifyCourseDto,
+  ): Promise<CourseDbRecord> {
+    return this.dbPool
+      .query<CourseDbRecord>(
+        `
+          UPDATE
+            "${COURSES_TABLE_NAME}"
+          SET
+            title = $1,
+            description = $2,
+            want_to_improve = $3
+          WHERE
+            id = $4
+          RETURNING *;
+        `,
+        [
+          modifyCourseDto.title,
+          modifyCourseDto.description,
+          modifyCourseDto.wantToImprove,
+          courseId,
+        ],
+      )
+      .then(({ rows }) => rows[0]);
   }
 }
