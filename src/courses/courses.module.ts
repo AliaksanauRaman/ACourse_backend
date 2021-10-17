@@ -6,12 +6,12 @@ import { DbModule } from '../db/db.module';
 
 import { CoursesController } from './courses.controller';
 import { CoursesDbService } from './courses-db.service';
-import { LecturesService } from './lectures.service';
+import { LecturesDbService } from './lectures.service';
 
 @Module({
   imports: [DbModule, FilesModule, StorageModule],
   controllers: [CoursesController],
-  providers: [CoursesDbService, LecturesService],
+  providers: [CoursesDbService, LecturesDbService],
   exports: [],
 })
 export class CoursesModule {}

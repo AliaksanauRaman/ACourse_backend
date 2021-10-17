@@ -7,7 +7,7 @@ import { COURSES_TABLE_NAME, LECTURES_TABLE_NAME } from './courses.config';
 import { LectureDbRecord } from './types/lecture-db-record';
 
 @Injectable()
-export class LecturesService {
+export class LecturesDbService {
   constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
   async getAllCourseLecturesFromDb(

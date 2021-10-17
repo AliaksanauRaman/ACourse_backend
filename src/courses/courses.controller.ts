@@ -15,7 +15,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { CoursesDbService } from './courses-db.service';
-import { LecturesService } from './lectures.service';
+import { LecturesDbService } from './lectures-db.service';
 import { FilesDbService } from '../files/files-db.service';
 import { StorageService } from '../storage/storage.service';
 
@@ -33,7 +33,7 @@ import { ModifyCourseDto } from './dtos/modify-course.dto';
 export class CoursesController {
   constructor(
     private readonly coursesDbService: CoursesDbService,
-    private readonly lecturesService: LecturesService,
+    private readonly lecturesDbService: LecturesDbService,
     private readonly filesDbService: FilesDbService,
     private readonly storageService: StorageService,
   ) {}
@@ -61,7 +61,7 @@ export class CoursesController {
     courseId: string,
   ): Promise<Array<Lecture>> {
     const lecturesFromDb =
-      await this.lecturesService.getAllCourseLecturesFromDb(courseId);
+      await this.lecturesDbService.getAllCourseLecturesFromDb(courseId);
     return lecturesFromDb.map(mapLectureDbRecordToLecture);
   }
 
@@ -102,7 +102,7 @@ export class CoursesController {
     courseId: string,
     @Body() createLectureDto: CreateLectureDto,
   ): Promise<Lecture> {
-    const lectureAddedToDb = await this.lecturesService.addLectureToDb(
+    const lectureAddedToDb = await this.lecturesDbService.addLectureToDb(
       courseId,
       createLectureDto,
     );
@@ -167,10 +167,8 @@ export class CoursesController {
     @Param('lectureId', new ParseUUIDPipe({ version: UUID_VERSION }))
     lectureId: string,
   ): Promise<Lecture> {
-    const deletedLectureFromDb = await this.lecturesService.deleteLectureFromDb(
-      courseId,
-      lectureId,
-    );
+    const deletedLectureFromDb =
+      await this.lecturesDbService.deleteLectureFromDb(courseId, lectureId);
     return mapLectureDbRecordToLecture(deletedLectureFromDb);
   }
 }
