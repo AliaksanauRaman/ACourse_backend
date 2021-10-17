@@ -7,6 +7,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
   StreamableFile,
   UploadedFile,
   UseInterceptors,
@@ -26,6 +27,7 @@ import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-cours
 import { CreateLectureDto } from './dtos/create-lecture.dto';
 import { UUID_VERSION } from '../constants';
 import { UploadLectureFileResponse } from './types/result-of-upload-a-lecture-file';
+import { ModifyCourseDto } from './dtos/modify-course.dto';
 
 @Controller('courses')
 export class CoursesController {
@@ -136,6 +138,19 @@ export class CoursesController {
       file.buffer,
     );
     return { uploadedFileid };
+  }
+
+  @Put('/:courseId')
+  async handleModifyCourse(
+    @Param('courseId', new ParseUUIDPipe({ version: UUID_VERSION }))
+    courseId: string,
+    @Body() modifyCourseDto: ModifyCourseDto,
+  ): Promise<Course> {
+    const modifiedCourseFromDb = await this.coursesService.modifyCourse(
+      courseId,
+      modifyCourseDto,
+    );
+    return mapCourseDbRecordToCourse(modifiedCourseFromDb);
   }
 
   @Delete('/:courseId')
