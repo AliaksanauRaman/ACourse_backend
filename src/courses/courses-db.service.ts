@@ -137,6 +137,12 @@ export class CoursesDbService {
           courseId,
         ],
       )
-      .then(({ rows }) => rows[0]);
+      .then(({ rowCount, rows }) => {
+        if (rowCount === 1) {
+          return rows[0];
+        }
+
+        throw new NotFoundException('Course was not found!');
+      });
   }
 }
