@@ -95,16 +95,24 @@ describe('Controller CoursesController', () => {
     let spyOnSelectAllCourseLectures: jest.SpyInstance<
       ReturnType<typeof lecturesDbService.selectAllCourseLectures>
     >;
+    let spyOnCheckIfCourseExists: jest.SpyInstance<
+      ReturnType<typeof coursesDbService.checkIfCourseExists>
+    >;
 
     beforeEach(() => {
       spyOnSelectAllCourseLectures = jest.spyOn(
         lecturesDbService,
         'selectAllCourseLectures',
       );
+      spyOnCheckIfCourseExists = jest.spyOn(
+        coursesDbService,
+        'checkIfCourseExists',
+      );
     });
 
     it('should return an empty list if there are no lectures in the db for provided course', async () => {
       spyOnSelectAllCourseLectures.mockResolvedValueOnce([]);
+      spyOnCheckIfCourseExists.mockResolvedValueOnce(true);
 
       const lectures = await coursesController.handleGetAllCourseLectures(
         uuid(),
@@ -116,6 +124,7 @@ describe('Controller CoursesController', () => {
     it('should return a list of course lectures from the db prepared for the frontend', async () => {
       const lecturesDbRecords = lectureDbRecordFactory.buildList(3);
       spyOnSelectAllCourseLectures.mockResolvedValueOnce(lecturesDbRecords);
+      spyOnCheckIfCourseExists.mockResolvedValueOnce(true);
 
       const lectures = await coursesController.handleGetAllCourseLectures(
         uuid(),
