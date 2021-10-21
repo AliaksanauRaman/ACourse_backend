@@ -3,6 +3,7 @@ import { Pool } from 'pg';
 
 import { DB_POOL } from '../db/constants';
 import { CreateLectureDto } from './dtos/create-lecture.dto';
+import { ModifyLectureDto } from './dtos/modify-lecture.dto';
 import { LECTURES_TABLE_NAME } from './courses.config';
 import { LectureDbRecord } from './types/lecture-db-record';
 
@@ -93,6 +94,40 @@ export class LecturesDbService {
           RETURNING *;
         `,
         [courseId, lectureId],
+      )
+      .then(({ rows, rowCount }) => {
+        if (rowCount === 1) {
+          return rows[0];
+        }
+
+        throw new NotFoundException('Lecture was not found!');
+      });
+  }
+
+  async modifyLecture(
+    courseId: string,
+    lectureId: string,
+    modifyLectureDto: ModifyLectureDto,
+  ): Promise<LectureDbRecord> {
+    return this.dbPool
+      .query<LectureDbRecord>(
+        `
+          UPDATE
+            "${LECTURES_TABLE_NAME}"
+          SET title = $1,
+              description = $2
+          WHERE
+            course_id=$3
+          AND
+            id=$4
+          RETURNING *;
+        `,
+        [
+          modifyLectureDto.title,
+          modifyLectureDto.description,
+          courseId,
+          lectureId,
+        ],
       )
       .then(({ rows, rowCount }) => {
         if (rowCount === 1) {
