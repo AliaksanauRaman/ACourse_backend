@@ -27,6 +27,7 @@ import { CreateLectureDto } from './dtos/create-lecture.dto';
 import { UUIDValidatorPipe } from '../shared/pipes/uuid-validator';
 import { UploadLectureFileResponse } from './types/result-of-upload-a-lecture-file';
 import { ModifyCourseDto } from './dtos/modify-course.dto';
+import { ModifyLectureDto } from './dtos/modify-lecture.dto';
 
 @Controller('courses')
 export class CoursesController {
@@ -159,6 +160,22 @@ export class CoursesController {
       modifyCourseDto,
     );
     return mapCourseDbRecordToCourse(modifiedCourseDbRecord);
+  }
+
+  @Put('/:courseId/lectures/:lectureId')
+  async handleModifyCourseLecture(
+    @Param('courseId', UUIDValidatorPipe)
+    courseId: string,
+    @Param('lectureId', UUIDValidatorPipe)
+    lectureId: string,
+    @Body() modifyLectureDto: ModifyLectureDto,
+  ): Promise<Lecture> {
+    const modifiedLectureDbRecord = await this.lecturesDbService.modifyLecture(
+      courseId,
+      lectureId,
+      modifyLectureDto,
+    );
+    return mapLectureDbRecordToLecture(modifiedLectureDbRecord);
   }
 
   @Delete('/:courseId')
