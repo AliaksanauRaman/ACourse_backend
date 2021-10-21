@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
+
 import { FilesModule } from '../files/files.module';
 import { StorageModule } from '../storage/storage.module';
-
 import { DbModule } from '../db/db.module';
 
 import { CoursesController } from './courses.controller';

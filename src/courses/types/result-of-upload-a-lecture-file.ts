@@ -1,3 +1,3 @@
 export type UploadLectureFileResponse = {
-  readonly uploadedFileid: string;
+  readonly uploadedFileId: string;
 };

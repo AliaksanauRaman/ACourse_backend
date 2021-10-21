@@ -129,11 +129,11 @@ export class CoursesController {
 
     const lectureFileDbRecord =
       await this.filesDbService.insertLectureFileRecord(lectureId, file);
-    const uploadedFileid = await this.storageService.saveLectureFile(
+    const uploadedFileId = await this.storageService.saveLectureFile(
       lectureFileDbRecord.id,
       file.buffer,
     );
-    return { uploadedFileid };
+    return { uploadedFileId };
   }
 
   @Put('/:courseId')
