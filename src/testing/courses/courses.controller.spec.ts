@@ -16,7 +16,7 @@ import { lectureDbRecordFactory } from '../tools/factories/lecture-db-record-fac
 import { isLecture } from '../../courses/types/lecture';
 import { isCourse } from '../../courses/types/course';
 
-describe('CoursesController', () => {
+describe('Controller CoursesController', () => {
   let coursesDbService: CoursesDbService;
   let lecturesDbService: LecturesDbService;
   let coursesController: CoursesController;
