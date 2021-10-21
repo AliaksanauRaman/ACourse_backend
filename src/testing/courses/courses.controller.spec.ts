@@ -12,7 +12,7 @@ import { LecturesDbService } from '../../courses/lectures-db.service';
 
 import { mapCourseDbRecordToCourse } from '../../courses/utils/map-course-db-record-to-course';
 
-import { courseDbRecordFactory } from '../factories/course-db-record-factory';
+import { courseDbRecordFactory } from '../tools/factories/course-db-record-factory';
 
 describe('CoursesController', () => {
   let coursesDbService: CoursesDbService;
