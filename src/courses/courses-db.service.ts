@@ -24,6 +24,24 @@ export class CoursesDbService {
       .then(({ rows }) => rows);
   }
 
+  async checkIfCourseExists(courseId: string): Promise<boolean> {
+    return this.dbPool
+      .query<{ exists: boolean }>(
+        `
+          SELECT EXISTS (
+            SELECT
+              true
+            FROM
+              "${COURSES_TABLE_NAME}"
+            WHERE
+              id=$1
+          );
+        `,
+        [courseId],
+      )
+      .then(({ rows: [{ exists }] }) => exists);
+  }
+
   async selectCourseById(courseId: string): Promise<CourseDbRecord> {
     return this.dbPool
       .query<CourseDbRecord>(
