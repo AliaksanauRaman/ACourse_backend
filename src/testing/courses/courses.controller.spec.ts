@@ -10,12 +10,15 @@ import { CoursesController } from '../../courses/courses.controller';
 import { CoursesDbService } from '../../courses/courses-db.service';
 import { LecturesDbService } from '../../courses/lectures-db.service';
 
-import { mapCourseDbRecordToCourse } from '../../courses/utils/map-course-db-record-to-course';
-
 import { courseDbRecordFactory } from '../tools/factories/course-db-record-factory';
+import { lectureDbRecordFactory } from '../tools/factories/lecture-db-record-factory';
+
+import { isLecture } from '../../courses/types/lecture';
+import { isCourse } from '../../courses/types/course';
 
 describe('CoursesController', () => {
   let coursesDbService: CoursesDbService;
+  let lecturesDbService: LecturesDbService;
   let coursesController: CoursesController;
 
   beforeEach(async () => {
@@ -27,6 +30,8 @@ describe('CoursesController', () => {
 
     coursesDbService =
       coursesTestingModule.get<CoursesDbService>(CoursesDbService);
+    lecturesDbService =
+      coursesTestingModule.get<LecturesDbService>(LecturesDbService);
     coursesController =
       coursesTestingModule.get<CoursesController>(CoursesController);
   });
@@ -40,21 +45,22 @@ describe('CoursesController', () => {
       spyOnSelectAllCourses = jest.spyOn(coursesDbService, 'selectAllCourses');
     });
 
-    it('should return an empty array when there is no records in the db', async () => {
+    it('should return an empty list if there are no courses in the db', async () => {
       spyOnSelectAllCourses.mockResolvedValueOnce([]);
 
-      return expect(coursesController.handleGetAllCourses()).resolves.toEqual(
-        [],
-      );
+      const courses = await coursesController.handleGetAllCourses();
+
+      return expect(courses).toEqual([]);
     });
 
-    it('should return an array with courses prepared for the frontend', async () => {
+    it('should return a list of courses from db prepared for the frontend', async () => {
       const courseDbRecords = courseDbRecordFactory.buildList(3);
       spyOnSelectAllCourses.mockResolvedValueOnce(courseDbRecords);
 
-      return expect(coursesController.handleGetAllCourses()).resolves.toEqual(
-        courseDbRecords.map(mapCourseDbRecordToCourse),
-      );
+      const courses = await coursesController.handleGetAllCourses();
+
+      expect(courseDbRecords.length).toBe(courses.length);
+      expect(courses.every(isCourse)).toBeTruthy();
     });
   });
 
@@ -75,13 +81,48 @@ describe('CoursesController', () => {
       ).rejects.toEqual(new NotFoundException());
     });
 
-    it('should return a course prepared for the frontend', async () => {
+    it('should return the course from db prepared for the frontend', async () => {
       const courseDbRecord = courseDbRecordFactory.build();
       spyOnSelectCourseById.mockResolvedValueOnce(courseDbRecord);
 
-      return expect(
-        coursesController.handleGetCourseById(uuid()),
-      ).resolves.toEqual(mapCourseDbRecordToCourse(courseDbRecord));
+      const course = await coursesController.handleGetCourseById(uuid());
+
+      expect(isCourse(course)).toBeTruthy();
+    });
+  });
+
+  describe('handleGetAllCourseLectures', () => {
+    let spyOnSelectAllCourseLectures: jest.SpyInstance<
+      ReturnType<typeof lecturesDbService.selectAllCourseLectures>
+    >;
+
+    beforeEach(() => {
+      spyOnSelectAllCourseLectures = jest.spyOn(
+        lecturesDbService,
+        'selectAllCourseLectures',
+      );
+    });
+
+    it('should return an empty list if there are no lectures in the db for provided course', async () => {
+      spyOnSelectAllCourseLectures.mockResolvedValueOnce([]);
+
+      const lectures = await coursesController.handleGetAllCourseLectures(
+        uuid(),
+      );
+
+      expect(lectures).toEqual([]);
+    });
+
+    it('should return a list of course lectures from the db prepared for the frontend', async () => {
+      const lecturesDbRecords = lectureDbRecordFactory.buildList(3);
+      spyOnSelectAllCourseLectures.mockResolvedValueOnce(lecturesDbRecords);
+
+      const lectures = await coursesController.handleGetAllCourseLectures(
+        uuid(),
+      );
+
+      expect(lectures.every(isLecture)).toBeTruthy();
+      expect(lecturesDbRecords.length).toBe(lectures.length);
     });
   });
 });
