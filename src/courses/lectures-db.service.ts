@@ -3,7 +3,7 @@ import { Pool } from 'pg';
 
 import { DB_POOL } from '../db/constants';
 import { CreateLectureDto } from './dtos/create-lecture.dto';
-import { COURSES_TABLE_NAME, LECTURES_TABLE_NAME } from './courses.config';
+import { LECTURES_TABLE_NAME } from './courses.config';
 import { LectureDbRecord } from './types/lecture-db-record';
 
 @Injectable()
@@ -17,27 +17,44 @@ export class LecturesDbService {
     return this.dbPool
       .query<LectureDbRecord>(
         `
-        SELECT
-          "${LECTURES_TABLE_NAME}"."id",
-          "${LECTURES_TABLE_NAME}"."course_id",
-          "${LECTURES_TABLE_NAME}"."title",
-          "${LECTURES_TABLE_NAME}"."description",
-          "${LECTURES_TABLE_NAME}"."created_at",
-          "${LECTURES_TABLE_NAME}"."modified_at"
-        FROM
-          "${COURSES_TABLE_NAME}"
-        LEFT JOIN
-          "${LECTURES_TABLE_NAME}"
-        ON
-          "${COURSES_TABLE_NAME}"."id"="${LECTURES_TABLE_NAME}"."course_id"
-        WHERE
-          "${COURSES_TABLE_NAME}"."id"=$1
-        AND
-          "${LECTURES_TABLE_NAME}"."id" IS NOT NULL;
-      `,
+          SELECT
+            *
+          FROM
+            "${LECTURES_TABLE_NAME}"
+          WHERE
+            course_id=$1;
+        `,
         [courseId],
       )
       .then(({ rows }) => rows);
+  }
+
+  async selectCourseLectureById(
+    courseId: string,
+    lectureId: string,
+  ): Promise<LectureDbRecord> {
+    return this.dbPool
+      .query<LectureDbRecord>(
+        `
+          SELECT
+            *
+          FROM
+            "${LECTURES_TABLE_NAME}"
+          WHERE
+            course_id=$1
+          AND
+            id=$2
+          FETCH FIRST ROW ONLY;
+        `,
+        [courseId, lectureId],
+      )
+      .then(({ rowCount, rows }) => {
+        if (rowCount === 1) {
+          return rows[0];
+        }
+
+        throw new NotFoundException('Lecture was not found!');
+      });
   }
 
   async insertLecture(
