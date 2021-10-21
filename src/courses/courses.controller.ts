@@ -64,6 +64,18 @@ export class CoursesController {
     return courseLecturesDbRecords.map(mapLectureDbRecordToLecture);
   }
 
+  @Get('/:courseId/lectures/:lectureId')
+  async handleGetCourseLectureById(
+    @Param('courseId', UUIDValidatorPipe)
+    courseId: string,
+    @Param('lectureId', UUIDValidatorPipe)
+    lectureId: string,
+  ): Promise<Lecture> {
+    const courseLectureDbRecord =
+      await this.lecturesDbService.selectCourseLectureById(courseId, lectureId);
+    return mapLectureDbRecordToLecture(courseLectureDbRecord);
+  }
+
   @Get('/:courseId/lectures/:lectureId/get-file/:fileId')
   async handleGetOfCourseLectureFile(
     @Param('courseId', UUIDValidatorPipe)
