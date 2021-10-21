@@ -60,6 +60,14 @@ export class CoursesController {
     @Param('courseId', UUIDValidatorPipe)
     courseId: string,
   ): Promise<Array<Lecture>> {
+    const courseExists = await this.coursesDbService.checkIfCourseExists(
+      courseId,
+    );
+
+    if (!courseExists) {
+      throw new NotFoundException('Course was not found!');
+    }
+
     const courseLecturesDbRecords =
       await this.lecturesDbService.selectAllCourseLectures(courseId);
     return courseLecturesDbRecords.map(mapLectureDbRecordToLecture);
