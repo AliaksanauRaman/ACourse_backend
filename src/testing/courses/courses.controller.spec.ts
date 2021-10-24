@@ -6,7 +6,10 @@ import { FilesModule } from '../../files/files.module';
 import { StorageModule } from '../../storage/storage.module';
 import { DbModule } from '../../db/db.module';
 
+import { COURSES_DB_SERVICE } from '../../courses/tokens/courses-db-service.token';
+
 import { CoursesController } from '../../courses/courses.controller';
+import { ICoursesDbService } from '../../courses/interfaces/courses-db-service.interface';
 import { CoursesDbService } from '../../courses/courses-db.service';
 import { LecturesDbService } from '../../courses/lectures-db.service';
 
@@ -17,7 +20,7 @@ import { isLecture } from '../../courses/types/lecture';
 import { isCourse } from '../../courses/types/course';
 
 describe('Controller CoursesController', () => {
-  let coursesDbService: CoursesDbService;
+  let coursesDbService: ICoursesDbService;
   let lecturesDbService: LecturesDbService;
   let coursesController: CoursesController;
 
@@ -25,11 +28,17 @@ describe('Controller CoursesController', () => {
     const coursesTestingModule = await Test.createTestingModule({
       imports: [FilesModule, StorageModule, DbModule],
       controllers: [CoursesController],
-      providers: [CoursesDbService, LecturesDbService],
+      providers: [
+        {
+          provide: COURSES_DB_SERVICE,
+          useClass: CoursesDbService,
+        },
+        LecturesDbService,
+      ],
     }).compile();
 
     coursesDbService =
-      coursesTestingModule.get<CoursesDbService>(CoursesDbService);
+      coursesTestingModule.get<ICoursesDbService>(COURSES_DB_SERVICE);
     lecturesDbService =
       coursesTestingModule.get<LecturesDbService>(LecturesDbService);
     coursesController =
