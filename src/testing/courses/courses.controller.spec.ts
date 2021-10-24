@@ -74,11 +74,11 @@ describe('Controller CoursesController', () => {
     });
 
     it('should throw 404 error if no course was found by provided id', async () => {
-      spyOnSelectCourseById.mockRejectedValueOnce(new NotFoundException());
+      spyOnSelectCourseById.mockResolvedValueOnce(null);
 
       return expect(
         coursesController.handleGetCourseById('course-id'),
-      ).rejects.toEqual(new NotFoundException());
+      ).rejects.toEqual(new NotFoundException('Course was not found!'));
     });
 
     it('should return the course from db prepared for the frontend', async () => {
