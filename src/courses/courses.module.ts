@@ -7,11 +7,18 @@ import { DbModule } from '../db/db.module';
 import { CoursesController } from './courses.controller';
 import { CoursesDbService } from './courses-db.service';
 import { LecturesDbService } from './lectures-db.service';
+import { COURSES_DB_SERVICE } from './tokens/courses-db-service.token';
 
 @Module({
   imports: [DbModule, FilesModule, StorageModule],
   controllers: [CoursesController],
-  providers: [CoursesDbService, LecturesDbService],
+  providers: [
+    {
+      provide: COURSES_DB_SERVICE,
+      useClass: CoursesDbService,
+    },
+    LecturesDbService,
+  ],
   exports: [],
 })
 export class CoursesModule {}

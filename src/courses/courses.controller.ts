@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   NotFoundException,
   Param,
   Post,
@@ -13,11 +14,11 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { CoursesDbService } from './courses-db.service';
 import { LecturesDbService } from './lectures-db.service';
 import { FilesDbService } from '../files/files-db.service';
 import { StorageService } from '../storage/storage.service';
 
+import { COURSES_DB_SERVICE } from './tokens/courses-db-service.token';
 import { Course } from './types/course';
 import { CreateCourseDto } from './dtos/create-course.dto';
 import { mapLectureDbRecordToLecture } from './utils/map-lecture-db-record-to-lecture';
@@ -28,11 +29,13 @@ import { UUIDValidatorPipe } from '../shared/pipes/uuid-validator';
 import { UploadLectureFileResponse } from './types/result-of-upload-a-lecture-file';
 import { ModifyCourseDto } from './dtos/modify-course.dto';
 import { ModifyLectureDto } from './dtos/modify-lecture.dto';
+import { ICoursesDbService } from './interfaces/courses-db-service.interface';
 
 @Controller('courses')
 export class CoursesController {
   constructor(
-    private readonly coursesDbService: CoursesDbService,
+    @Inject(COURSES_DB_SERVICE)
+    private readonly coursesDbService: ICoursesDbService,
     private readonly lecturesDbService: LecturesDbService,
     private readonly filesDbService: FilesDbService,
     private readonly storageService: StorageService,

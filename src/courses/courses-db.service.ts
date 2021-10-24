@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
 
+import { ICoursesDbService } from './interfaces/courses-db-service.interface';
 import { DB_POOL } from '../db/constants';
 import { CourseDbRecord } from './types/course-db-record';
 import { CreateCourseDto } from './dtos/create-course.dto';
@@ -8,7 +9,7 @@ import { COURSES_TABLE_NAME, LECTURES_TABLE_NAME } from './courses.config';
 import { ModifyCourseDto } from './dtos/modify-course.dto';
 
 @Injectable()
-export class CoursesDbService {
+export class CoursesDbService implements ICoursesDbService {
   constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
   async selectAllCourses(): Promise<Array<CourseDbRecord>> {
