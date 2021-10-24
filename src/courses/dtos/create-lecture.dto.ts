@@ -8,4 +8,9 @@ export class CreateLectureDto {
   @IsString()
   @IsNotEmpty()
   readonly description: string;
+
+  constructor(title: string, description: string) {
+    this.title = title;
+    this.description = description;
+  }
 }

@@ -11,4 +11,10 @@ export class CreateCourseDto {
 
   @IsBoolean()
   readonly wantToImprove: boolean;
+
+  constructor(title: string, description: string, wantToImprove: boolean) {
+    this.title = title;
+    this.description = description;
+    this.wantToImprove = wantToImprove;
+  }
 }
