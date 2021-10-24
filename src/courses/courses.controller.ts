@@ -52,6 +52,11 @@ export class CoursesController {
     const courseDbRecord = await this.coursesDbService.selectCourseById(
       courseId,
     );
+
+    if (courseDbRecord === null) {
+      throw new NotFoundException('Course was not found!');
+    }
+
     return mapCourseDbRecordToCourse(courseDbRecord);
   }
 
@@ -167,6 +172,11 @@ export class CoursesController {
       courseId,
       modifyCourseDto,
     );
+
+    if (modifiedCourseDbRecord === null) {
+      throw new NotFoundException('Course was not found!');
+    }
+
     return mapCourseDbRecordToCourse(modifiedCourseDbRecord);
   }
 
@@ -194,6 +204,11 @@ export class CoursesController {
     const deletedCourseDbRecord = await this.coursesDbService.deleteCourse(
       courseId,
     );
+
+    if (deletedCourseDbRecord === null) {
+      throw new NotFoundException('Course was not found!');
+    }
+
     return mapCourseDbRecordToCourse(deletedCourseDbRecord);
   }
 

@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
 
 import { DB_POOL } from '../db/constants';
@@ -15,11 +15,11 @@ export class CoursesDbService {
     return this.dbPool
       .query<CourseDbRecord>(
         `
-        SELECT
-          *
-        FROM
-          "${COURSES_TABLE_NAME}";
-      `,
+          SELECT
+            *
+          FROM
+            "${COURSES_TABLE_NAME}";
+        `,
       )
       .then(({ rows }) => rows);
   }
@@ -42,7 +42,7 @@ export class CoursesDbService {
       .then(({ rows: [{ exists }] }) => exists);
   }
 
-  async selectCourseById(courseId: string): Promise<CourseDbRecord> {
+  async selectCourseById(courseId: string): Promise<CourseDbRecord | null> {
     return this.dbPool
       .query<CourseDbRecord>(
         `
@@ -55,13 +55,7 @@ export class CoursesDbService {
       `,
         [courseId],
       )
-      .then(({ rowCount, rows }) => {
-        if (rowCount === 1) {
-          return rows[0];
-        }
-
-        throw new NotFoundException('Course was not found!');
-      });
+      .then(({ rowCount, rows }) => (rowCount === 1 ? rows[0] : null));
   }
 
   async insertCourse(
@@ -87,7 +81,7 @@ export class CoursesDbService {
       .then(({ rows: [createdCourse] }) => createdCourse);
   }
 
-  async deleteCourse(courseId: string): Promise<CourseDbRecord> {
+  async deleteCourse(courseId: string): Promise<CourseDbRecord | null> {
     return this.dbPool
       .query<CourseDbRecord>(
         `
@@ -99,13 +93,7 @@ export class CoursesDbService {
         `,
         [courseId],
       )
-      .then(({ rowCount, rows }) => {
-        if (rowCount === 1) {
-          return rows[0];
-        }
-
-        throw new NotFoundException('Course was not found!');
-      });
+      .then(({ rowCount, rows }) => (rowCount === 1 ? rows[0] : null));
   }
 
   async checkIfCourseHasLecture(
@@ -134,7 +122,7 @@ export class CoursesDbService {
   async modifyCourse(
     courseId: string,
     modifyCourseDto: ModifyCourseDto,
-  ): Promise<CourseDbRecord> {
+  ): Promise<CourseDbRecord | null> {
     return this.dbPool
       .query<CourseDbRecord>(
         `
@@ -155,12 +143,6 @@ export class CoursesDbService {
           courseId,
         ],
       )
-      .then(({ rowCount, rows }) => {
-        if (rowCount === 1) {
-          return rows[0];
-        }
-
-        throw new NotFoundException('Course was not found!');
-      });
+      .then(({ rowCount, rows }) => (rowCount === 1 ? rows[0] : null));
   }
 }
