@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
 
 import { DB_POOL } from '../db/constants';
@@ -33,7 +33,7 @@ export class LecturesDbService {
   async selectCourseLectureById(
     courseId: string,
     lectureId: string,
-  ): Promise<LectureDbRecord> {
+  ): Promise<LectureDbRecord | null> {
     return this.dbPool
       .query<LectureDbRecord>(
         `
@@ -49,13 +49,7 @@ export class LecturesDbService {
         `,
         [courseId, lectureId],
       )
-      .then(({ rowCount, rows }) => {
-        if (rowCount === 1) {
-          return rows[0];
-        }
-
-        throw new NotFoundException('Lecture was not found!');
-      });
+      .then(({ rowCount, rows }) => (rowCount === 1 ? rows[0] : null));
   }
 
   async insertLecture(
@@ -81,7 +75,7 @@ export class LecturesDbService {
   async deleteLecture(
     courseId: string,
     lectureId: string,
-  ): Promise<LectureDbRecord> {
+  ): Promise<LectureDbRecord | null> {
     return this.dbPool
       .query<LectureDbRecord>(
         `
@@ -95,20 +89,14 @@ export class LecturesDbService {
         `,
         [courseId, lectureId],
       )
-      .then(({ rows, rowCount }) => {
-        if (rowCount === 1) {
-          return rows[0];
-        }
-
-        throw new NotFoundException('Lecture was not found!');
-      });
+      .then(({ rows, rowCount }) => (rowCount === 1 ? rows[0] : null));
   }
 
   async modifyLecture(
     courseId: string,
     lectureId: string,
     modifyLectureDto: ModifyLectureDto,
-  ): Promise<LectureDbRecord> {
+  ): Promise<LectureDbRecord | null> {
     return this.dbPool
       .query<LectureDbRecord>(
         `
@@ -129,12 +117,6 @@ export class LecturesDbService {
           lectureId,
         ],
       )
-      .then(({ rows, rowCount }) => {
-        if (rowCount === 1) {
-          return rows[0];
-        }
-
-        throw new NotFoundException('Lecture was not found!');
-      });
+      .then(({ rows, rowCount }) => (rowCount === 1 ? rows[0] : null));
   }
 }

@@ -87,6 +87,11 @@ export class CoursesController {
   ): Promise<Lecture> {
     const courseLectureDbRecord =
       await this.lecturesDbService.selectCourseLectureById(courseId, lectureId);
+
+    if (courseLectureDbRecord === null) {
+      throw new NotFoundException('Lecture was not found!');
+    }
+
     return mapLectureDbRecordToLecture(courseLectureDbRecord);
   }
 
@@ -193,6 +198,11 @@ export class CoursesController {
       lectureId,
       modifyLectureDto,
     );
+
+    if (modifiedLectureDbRecord === null) {
+      throw new NotFoundException('Lecture was not found!');
+    }
+
     return mapLectureDbRecordToLecture(modifiedLectureDbRecord);
   }
 
@@ -223,6 +233,11 @@ export class CoursesController {
       courseId,
       lectureId,
     );
+
+    if (deletedLectureDbRecord === null) {
+      throw new NotFoundException('Lecture was not found!');
+    }
+
     return mapLectureDbRecordToLecture(deletedLectureDbRecord);
   }
 }
