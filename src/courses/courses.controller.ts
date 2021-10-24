@@ -25,7 +25,7 @@ import { mapLectureDbRecordToLecture } from './utils/map-lecture-db-record-to-le
 import { Lecture } from './types/lecture';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course';
 import { CreateLectureDto } from './dtos/create-lecture.dto';
-import { UUIDValidatorPipe } from '../shared/pipes/uuid-validator';
+import { UUIDValidatorPipe } from '../shared/pipes/uuid-validator.pipe';
 import { UploadLectureFileResponse } from './types/result-of-upload-a-lecture-file';
 import { ModifyCourseDto } from './dtos/modify-course.dto';
 import { ModifyLectureDto } from './dtos/modify-lecture.dto';

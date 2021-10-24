@@ -1,6 +1,6 @@
 import { ArgumentMetadata, BadRequestException } from '@nestjs/common';
 import { v1 as uuidV1, v4 as uuidV4 } from 'uuid';
-import { UUIDValidatorPipe } from '../../../shared/pipes/uuid-validator';
+import { UUIDValidatorPipe } from '../../../shared/pipes/uuid-validator.pipe';
 
 const generalMetadata: ArgumentMetadata = { type: 'param' };
 
