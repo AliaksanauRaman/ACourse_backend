@@ -1,5 +1,5 @@
-import { Course } from '../types/course';
-import { CourseDbRecord } from '../types/course-db-record';
+import { Course } from '../types/course.type';
+import { CourseDbRecord } from '../types/course-db-record.type';
 
 export const mapCourseDbRecordToCourse = (
   dbRecord: CourseDbRecord,

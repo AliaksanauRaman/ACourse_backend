@@ -13,11 +13,11 @@ import { ICoursesDbService } from '../../courses/interfaces/courses-db-service.i
 import { CoursesDbService } from '../../courses/courses-db.service';
 import { LecturesDbService } from '../../courses/lectures-db.service';
 
-import { courseDbRecordFactory } from '../tools/factories/course-db-record-factory';
-import { lectureDbRecordFactory } from '../tools/factories/lecture-db-record-factory';
+import { courseDbRecordFactory } from '../tools/factories/course-db-record.factory';
+import { lectureDbRecordFactory } from '../tools/factories/lecture-db-record.factory';
 
-import { isLecture } from '../../courses/types/lecture';
-import { isCourse } from '../../courses/types/course';
+import { isLecture } from '../../courses/types/lecture.type';
+import { isCourse } from '../../courses/types/course.type';
 
 describe('Controller CoursesController', () => {
   let coursesDbService: ICoursesDbService;

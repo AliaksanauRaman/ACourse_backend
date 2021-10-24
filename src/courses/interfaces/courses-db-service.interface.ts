@@ -1,6 +1,6 @@
 import { CreateCourseDto } from '../dtos/create-course.dto';
 import { ModifyCourseDto } from '../dtos/modify-course.dto';
-import { CourseDbRecord } from '../types/course-db-record';
+import { CourseDbRecord } from '../types/course-db-record.type';
 
 export interface ICoursesDbService {
   selectAllCourses(): Promise<Array<CourseDbRecord>>;

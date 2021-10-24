@@ -5,7 +5,7 @@ import { DB_POOL } from '../db/constants';
 import { CreateLectureDto } from './dtos/create-lecture.dto';
 import { ModifyLectureDto } from './dtos/modify-lecture.dto';
 import { LECTURES_TABLE_NAME } from './courses.config';
-import { LectureDbRecord } from './types/lecture-db-record';
+import { LectureDbRecord } from './types/lecture-db-record.type';
 
 @Injectable()
 export class LecturesDbService {

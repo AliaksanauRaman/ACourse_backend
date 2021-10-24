@@ -1,6 +1,6 @@
-import { mapCourseDbRecordToCourse } from '../../../courses/utils/map-course-db-record-to-course';
-import { isCourse } from '../../../courses/types/course';
-import { courseDbRecordFactory } from '../../tools/factories/course-db-record-factory';
+import { mapCourseDbRecordToCourse } from '../../../courses/utils/map-course-db-record-to-course.util';
+import { isCourse } from '../../../courses/types/course.type';
+import { courseDbRecordFactory } from '../../tools/factories/course-db-record.factory';
 
 describe('Function mapCourseDbRecordToCourse', () => {
   test('should return a course prepared for frontend from course db record', () => {

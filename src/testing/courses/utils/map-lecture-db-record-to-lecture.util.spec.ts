@@ -1,6 +1,6 @@
-import { mapLectureDbRecordToLecture } from '../../../courses/utils/map-lecture-db-record-to-lecture';
-import { isLecture } from '../../../courses/types/lecture';
-import { lectureDbRecordFactory } from '../../tools/factories/lecture-db-record-factory';
+import { mapLectureDbRecordToLecture } from '../../../courses/utils/map-lecture-db-record-to-lecture.util';
+import { isLecture } from '../../../courses/types/lecture.type';
+import { lectureDbRecordFactory } from '../../tools/factories/lecture-db-record.factory';
 
 describe('Function mapLectureDbRecordToLecture', () => {
   test('should return a lecture prepared for frontend from lecture db record', () => {

@@ -3,7 +3,7 @@ import { Pool } from 'pg';
 
 import { ICoursesDbService } from './interfaces/courses-db-service.interface';
 import { DB_POOL } from '../db/constants';
-import { CourseDbRecord } from './types/course-db-record';
+import { CourseDbRecord } from './types/course-db-record.type';
 import { CreateCourseDto } from './dtos/create-course.dto';
 import { COURSES_TABLE_NAME, LECTURES_TABLE_NAME } from './courses.config';
 import { ModifyCourseDto } from './dtos/modify-course.dto';

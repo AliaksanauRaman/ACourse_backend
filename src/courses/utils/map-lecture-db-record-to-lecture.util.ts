@@ -1,5 +1,5 @@
-import { Lecture } from '../types/lecture';
-import { LectureDbRecord } from '../types/lecture-db-record';
+import { Lecture } from '../types/lecture.type';
+import { LectureDbRecord } from '../types/lecture-db-record.type';
 
 export const mapLectureDbRecordToLecture = (
   dbRecord: LectureDbRecord,
