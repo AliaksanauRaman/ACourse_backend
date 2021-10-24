@@ -1,6 +1,6 @@
-import { isDate } from '../../shared/utils/is-date';
-import { isObject } from '../../shared/utils/is-object';
-import { isString } from '../../shared/utils/is-string';
+import { isDate } from '../../shared/utils/is-date.util';
+import { isObject } from '../../shared/utils/is-object.util';
+import { isString } from '../../shared/utils/is-string.util';
 
 export type LectureDbRecord = {
   readonly id: string;

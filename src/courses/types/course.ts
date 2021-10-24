@@ -1,7 +1,7 @@
-import { isObject } from '../../shared/utils/is-object';
-import { isString } from '../../shared/utils/is-string';
-import { isDate } from '../../shared/utils/is-date';
-import { isBoolean } from '../../shared/utils/is-boolean';
+import { isObject } from '../../shared/utils/is-object.util';
+import { isString } from '../../shared/utils/is-string.util';
+import { isDate } from '../../shared/utils/is-date.util';
+import { isBoolean } from '../../shared/utils/is-boolean.util';
 
 export type Course = {
   readonly id: string;
