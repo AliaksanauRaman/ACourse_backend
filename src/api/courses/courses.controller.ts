@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   NotFoundException,
@@ -91,5 +92,21 @@ export class CoursesController {
     }
 
     return mapCourseDbRecordToCourse(updatedCourseDbRecord);
+  }
+
+  @Delete('/:courseId')
+  async handleDeleteCourse(
+    @Param('courseId', UUIDValidatorPipe)
+    courseId: string,
+  ): Promise<Course> {
+    const deletedCourseDbRecord = await this.dbCoursesService.deleteCourse(
+      courseId,
+    );
+
+    if (deletedCourseDbRecord === null) {
+      throw new NotFoundException('Course was not found!');
+    }
+
+    return mapCourseDbRecordToCourse(deletedCourseDbRecord);
   }
 }
