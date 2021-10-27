@@ -83,4 +83,19 @@ export class DbLessonsService implements IDbLessonsService {
       )
       .then(({ rows, rowCount }) => (rowCount === 1 ? rows[0] : null));
   }
+
+  async deleteLesson(lessonId: string): Promise<LessonDbRecord | null> {
+    return this.dbPool
+      .query<LessonDbRecord>(
+        `
+          DELETE FROM
+            "${LESSONS_TABLE_NAME}"
+          WHERE
+            id=$1
+          RETURNING *;
+        `,
+        [lessonId],
+      )
+      .then(({ rows, rowCount }) => (rowCount === 1 ? rows[0] : null));
+  }
 }

@@ -9,4 +9,5 @@ export interface IDbLessonsService {
     lessonId: string,
     modifyLessonDto: ModifyLessonDto,
   ) => Promise<LessonDbRecord | null>;
+  deleteLesson: (lessonId: string) => Promise<LessonDbRecord | null>;
 }
