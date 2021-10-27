@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   NotFoundException,
@@ -43,10 +44,10 @@ export class LessonsController {
   async handleCreateLesson(
     @Body() createLessonDto: CreateLessonDto,
   ): Promise<Lesson> {
-    const createdLessonDbRecord = await this.dbLessonsService.insertLesson(
+    const insertedLessonDbRecord = await this.dbLessonsService.insertLesson(
       createLessonDto,
     );
-    return mapLessonDbRecordToLesson(createdLessonDbRecord);
+    return mapLessonDbRecordToLesson(insertedLessonDbRecord);
   }
 
   @Put('/:lessonId')
@@ -55,15 +56,31 @@ export class LessonsController {
     lessonId: string,
     @Body() modifyLessonDto: ModifyLessonDto,
   ): Promise<Lesson> {
-    const modifiedLessonDbRecord = await this.dbLessonsService.updateLesson(
+    const updatedLessonDbRecord = await this.dbLessonsService.updateLesson(
       lessonId,
       modifyLessonDto,
     );
 
-    if (modifiedLessonDbRecord === null) {
+    if (updatedLessonDbRecord === null) {
       throw new NotFoundException('Lesson was not found!');
     }
 
-    return mapLessonDbRecordToLesson(modifiedLessonDbRecord);
+    return mapLessonDbRecordToLesson(updatedLessonDbRecord);
+  }
+
+  @Delete('/:lessonId')
+  async handleDeleteLesson(
+    @Param('lessonId', UUIDValidatorPipe)
+    lessonId: string,
+  ): Promise<Lesson> {
+    const deletedLessonDbRecord = await this.dbLessonsService.deleteLesson(
+      lessonId,
+    );
+
+    if (deletedLessonDbRecord === null) {
+      throw new NotFoundException('Lesson was not found!');
+    }
+
+    return mapLessonDbRecordToLesson(deletedLessonDbRecord);
   }
 }
