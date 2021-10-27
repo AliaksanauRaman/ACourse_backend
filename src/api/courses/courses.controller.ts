@@ -6,6 +6,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
 
 import { DB_COURSES_SERVICE } from './tokens/db-courses-service.token';
@@ -17,6 +18,7 @@ import { UUIDValidatorPipe } from 'src/shared/pipes/uuid-validator.pipe';
 import { Lesson } from '../lessons/types/lesson.type';
 import { mapLessonDbRecordToLesson } from '../lessons/utils/map-lesson-db-record-to-lesson.util';
 import { CreateCourseDto } from './dtos/create-course.dto';
+import { ModifyCourseDto } from './dtos/modify-course.dto';
 
 @Controller('courses')
 export class CoursesController {
@@ -71,5 +73,23 @@ export class CoursesController {
       createCourseDto,
     );
     return mapCourseDbRecordToCourse(insertedCourseDbRecord);
+  }
+
+  @Put('/:courseId')
+  async handleModifyCourse(
+    @Param('courseId', UUIDValidatorPipe)
+    courseId: string,
+    @Body() modifyCourseDto: ModifyCourseDto,
+  ): Promise<Course> {
+    const updatedCourseDbRecord = await this.dbCoursesService.updateCourse(
+      courseId,
+      modifyCourseDto,
+    );
+
+    if (updatedCourseDbRecord === null) {
+      throw new NotFoundException('Course was not found!');
+    }
+
+    return mapCourseDbRecordToCourse(updatedCourseDbRecord);
   }
 }
