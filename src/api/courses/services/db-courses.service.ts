@@ -86,7 +86,7 @@ export class DbCoursesService implements IDbCoursesService {
       .then(({ rows: [createdCourse] }) => createdCourse);
   }
 
-  async modifyCourse(
+  async updateCourse(
     courseId: string,
     modifyCourseDto: ModifyCourseDto,
   ): Promise<CourseDbRecord | null> {

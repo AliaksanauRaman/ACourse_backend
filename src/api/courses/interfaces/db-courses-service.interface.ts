@@ -9,7 +9,7 @@ export interface IDbCoursesService {
   selectAllCourseLessons(courseId: string): Promise<Array<LessonDbRecord>>;
   insertCourse(createCourseDto: CreateCourseDto): Promise<CourseDbRecord>;
   deleteCourse(courseId: string): Promise<CourseDbRecord | null>;
-  modifyCourse(
+  updateCourse(
     courseId: string,
     modifyCourseDto: ModifyCourseDto,
   ): Promise<CourseDbRecord | null>;
