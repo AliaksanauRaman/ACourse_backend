@@ -1,9 +1,11 @@
 import {
+  Body,
   Controller,
   Get,
   Inject,
   NotFoundException,
   Param,
+  Post,
 } from '@nestjs/common';
 
 import { DB_COURSES_SERVICE } from './tokens/db-courses-service.token';
@@ -14,6 +16,7 @@ import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-cours
 import { UUIDValidatorPipe } from 'src/shared/pipes/uuid-validator.pipe';
 import { Lesson } from '../lessons/types/lesson.type';
 import { mapLessonDbRecordToLesson } from '../lessons/utils/map-lesson-db-record-to-lesson.util';
+import { CreateCourseDto } from './dtos/create-course.dto';
 
 @Controller('courses')
 export class CoursesController {
@@ -58,5 +61,15 @@ export class CoursesController {
     const courseLessonsDbRecords =
       await this.dbCoursesService.selectAllCourseLessons(courseId);
     return courseLessonsDbRecords.map(mapLessonDbRecordToLesson);
+  }
+
+  @Post('/')
+  async handleCreateCourse(
+    @Body() createCourseDto: CreateCourseDto,
+  ): Promise<Course> {
+    const insertedCourseDbRecord = await this.dbCoursesService.insertCourse(
+      createCourseDto,
+    );
+    return mapCourseDbRecordToCourse(insertedCourseDbRecord);
   }
 }
