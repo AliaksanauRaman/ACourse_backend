@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import { CoursesModule } from './courses/courses.module';
+import { CoursesModule } from './api/courses/courses.module';
 import { LessonsModule } from './api/lessons/lessons.module';
 
 import { AppController } from './app.controller';
