@@ -13,6 +13,23 @@ import { ModifyLessonDto } from '../dtos/modify-lesson.dto';
 export class DbLessonsService implements IDbLessonsService {
   constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
+  async selectLessonById(lessonId: string): Promise<LessonDbRecord | null> {
+    return this.dbPool
+      .query<LessonDbRecord>(
+        `
+          SELECT
+            *
+          FROM
+            "${LESSONS_TABLE_NAME}"
+          WHERE
+            id=$1
+          FETCH FIRST ROW ONLY;
+        `,
+        [lessonId],
+      )
+      .then(({ rows, rowCount }) => (rowCount === 1 ? rows[0] : null));
+  }
+
   async insertLesson(
     createLessonDto: CreateLessonDto,
   ): Promise<LessonDbRecord> {
