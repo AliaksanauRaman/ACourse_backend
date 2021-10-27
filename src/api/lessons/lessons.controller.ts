@@ -30,7 +30,6 @@ export class LessonsController {
     const createdLessonDbRecord = await this.dbLessonsService.insertLesson(
       createLessonDto,
     );
-
     return mapLessonDbRecordToLesson(createdLessonDbRecord);
   }
 
