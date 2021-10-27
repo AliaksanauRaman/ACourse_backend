@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Inject,
   NotFoundException,
   Param,
@@ -22,6 +23,21 @@ export class LessonsController {
     @Inject(DB_LESSONS_SERVICE)
     private readonly dbLessonsService: IDbLessonsService,
   ) {}
+
+  @Get('/:lessonId')
+  async handleGetLessonById(
+    @Param('lessonId', UUIDValidatorPipe) lessonId: string,
+  ): Promise<Lesson> {
+    const lessonDbRecord = await this.dbLessonsService.selectLessonById(
+      lessonId,
+    );
+
+    if (lessonDbRecord === null) {
+      throw new NotFoundException('Lesson was not found!');
+    }
+
+    return mapLessonDbRecordToLesson(lessonDbRecord);
+  }
 
   @Post('/')
   async handleCreateLesson(
