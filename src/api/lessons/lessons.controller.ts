@@ -18,7 +18,7 @@ import { mapLessonDbRecordToLesson } from './utils/map-lesson-db-record-to-lesso
 import { UUIDValidatorPipe } from 'src/shared/pipes/uuid-validator.pipe';
 import { ModifyLessonDto } from './dtos/modify-lesson.dto';
 
-@Controller('lessons')
+@Controller('api/lessons')
 export class LessonsController {
   constructor(
     @Inject(DB_LESSONS_SERVICE)

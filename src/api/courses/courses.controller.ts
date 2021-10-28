@@ -21,7 +21,7 @@ import { mapLessonDbRecordToLesson } from '../lessons/utils/map-lesson-db-record
 import { CreateCourseDto } from './dtos/create-course.dto';
 import { ModifyCourseDto } from './dtos/modify-course.dto';
 
-@Controller('courses')
+@Controller('api/courses')
 export class CoursesController {
   constructor(
     @Inject(DB_COURSES_SERVICE)
