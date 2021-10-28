@@ -1,17 +1,34 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
 
-import { DB_POOL } from '../../../db/constants';
+import { DB_POOL } from '../../../db/tokens/db-pool.token';
+import { LESSONS_TABLE_NAME } from '../../../db/tables-names.constants';
 
 import { IDbLessonsService } from '../interfaces/db-lessons-service.interface';
 import { CreateLessonDto } from '../dtos/create-lesson.dto';
 import { LessonDbRecord } from '../types/lesson-db-record.type';
-import { LESSONS_TABLE_NAME } from '../lessons.constants';
 import { ModifyLessonDto } from '../dtos/modify-lesson.dto';
 
 @Injectable()
 export class DbLessonsService implements IDbLessonsService {
   constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
+
+  async selectLessonById(lessonId: string): Promise<LessonDbRecord | null> {
+    return this.dbPool
+      .query<LessonDbRecord>(
+        `
+          SELECT
+            *
+          FROM
+            "${LESSONS_TABLE_NAME}"
+          WHERE
+            id=$1
+          FETCH FIRST ROW ONLY;
+        `,
+        [lessonId],
+      )
+      .then(({ rows, rowCount }) => (rowCount === 1 ? rows[0] : null));
+  }
 
   async insertLesson(
     createLessonDto: CreateLessonDto,
@@ -63,6 +80,21 @@ export class DbLessonsService implements IDbLessonsService {
           modifyLessonDto.courseId,
           lessonId,
         ],
+      )
+      .then(({ rows, rowCount }) => (rowCount === 1 ? rows[0] : null));
+  }
+
+  async deleteLesson(lessonId: string): Promise<LessonDbRecord | null> {
+    return this.dbPool
+      .query<LessonDbRecord>(
+        `
+          DELETE FROM
+            "${LESSONS_TABLE_NAME}"
+          WHERE
+            id=$1
+          RETURNING *;
+        `,
+        [lessonId],
       )
       .then(({ rows, rowCount }) => (rowCount === 1 ? rows[0] : null));
   }

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
 
-import { DB_POOL } from '../db/constants';
+import { DB_POOL } from '../db/tokens/db-pool.token';
 import { CreateLectureDto } from './dtos/create-lecture.dto';
 import { ModifyLectureDto } from './dtos/modify-lecture.dto';
 import { LECTURES_TABLE_NAME } from './courses.config';
@@ -9,7 +9,6 @@ import { LectureDbRecord } from './types/lecture-db-record.type';
 
 @Injectable()
 export class LecturesDbService {
-  // TODO: Add modify lecture functionality
   constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
   async selectAllCourseLectures(
