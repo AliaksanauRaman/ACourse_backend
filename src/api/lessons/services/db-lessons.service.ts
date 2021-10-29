@@ -68,16 +68,13 @@ export class DbLessonsService implements IDbLessonsService {
               type = $2,
               description = $3
           WHERE
-            course_id=$4
-          AND
-            id=$5
+            id=$4
           RETURNING *;
         `,
         [
           modifyLessonDto.title,
           modifyLessonDto.type,
           modifyLessonDto.description,
-          modifyLessonDto.courseId,
           lessonId,
         ],
       )
