@@ -40,7 +40,7 @@ export class DbLessonsService implements IDbLessonsService {
             course_id,
             title,
             type,
-            description,
+            description
           )
           VALUES ($1, $2, $3, $4)
           RETURNING *;
