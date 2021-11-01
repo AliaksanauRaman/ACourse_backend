@@ -12,7 +12,7 @@ export class Lesson {
   @ApiProperty()
   readonly title: string;
 
-  @ApiProperty()
+  @ApiProperty({ enum: LessonType })
   readonly type: LessonType;
 
   @ApiProperty()
