@@ -13,6 +13,7 @@ import {
 import { DB_COURSES_SERVICE } from './tokens/db-courses-service.token';
 import { DbCoursesService } from './services/db-courses.service';
 
+import { Endpoint } from '../endpoints';
 import { Course } from './types/course.type';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course.util';
 import { UUIDValidatorPipe } from 'src/shared/pipes/uuid-validator.pipe';
@@ -20,24 +21,34 @@ import { Lesson } from '../lessons/types/lesson.type';
 import { mapLessonDbRecordToLesson } from '../lessons/utils/map-lesson-db-record-to-lesson.util';
 import { CreateCourseDto } from './dtos/create-course.dto';
 import { ModifyCourseDto } from './dtos/modify-course.dto';
+import {
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
-@Controller('api/courses')
+@ApiTags(Endpoint.COURSES)
+@Controller(`api/${Endpoint.COURSES}`)
 export class CoursesController {
   constructor(
     @Inject(DB_COURSES_SERVICE)
     private readonly dbCoursesService: DbCoursesService,
   ) {}
 
+  @ApiOkResponse({ type: [Course] })
   @Get('/')
   async handleGetAllCourses(): Promise<Array<Course>> {
     const coursesDbRecords = await this.dbCoursesService.selectAllCourses();
     return coursesDbRecords.map(mapCourseDbRecordToCourse);
   }
 
+  @ApiOkResponse({ type: Course })
+  @ApiNotFoundResponse({ description: 'Course was not found!' })
   @Get('/:courseId')
   async handleGetCourseById(
     @Param('courseId', UUIDValidatorPipe) courseId: string,
-  ): Promise<Course | null> {
+  ): Promise<Course> {
     const courseDbRecord = await this.dbCoursesService.selectCourseById(
       courseId,
     );
@@ -49,6 +60,8 @@ export class CoursesController {
     return mapCourseDbRecordToCourse(courseDbRecord);
   }
 
+  @ApiOkResponse({ type: [Lesson] })
+  @ApiNotFoundResponse({ description: 'Course was not found!' })
   @Get('/:courseId/lessons')
   async handleGetCourseLessons(
     @Param('courseId', UUIDValidatorPipe) courseId: string,
@@ -66,6 +79,7 @@ export class CoursesController {
     return courseLessonsDbRecords.map(mapLessonDbRecordToLesson);
   }
 
+  @ApiCreatedResponse({ type: Course })
   @Post('/')
   async handleCreateCourse(
     @Body() createCourseDto: CreateCourseDto,
@@ -76,6 +90,8 @@ export class CoursesController {
     return mapCourseDbRecordToCourse(insertedCourseDbRecord);
   }
 
+  @ApiOkResponse({ type: Course })
+  @ApiNotFoundResponse({ description: 'Course was not found!' })
   @Put('/:courseId')
   async handleModifyCourse(
     @Param('courseId', UUIDValidatorPipe)
@@ -94,6 +110,8 @@ export class CoursesController {
     return mapCourseDbRecordToCourse(updatedCourseDbRecord);
   }
 
+  @ApiOkResponse({ type: Course })
+  @ApiNotFoundResponse({ description: 'Course was not found!' })
   @Delete('/:courseId')
   async handleDeleteCourse(
     @Param('courseId', UUIDValidatorPipe)
