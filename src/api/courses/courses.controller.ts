@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Inject,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -27,6 +26,8 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { COURSE_NOT_FOUND_MESSAGE } from './errors/messages';
+import { COURSE_NOT_FOUND_EXCEPTION } from './errors/exceptions';
 
 @ApiTags(Endpoint.COURSES)
 @Controller(`api/${Endpoint.COURSES}`)
@@ -44,7 +45,7 @@ export class CoursesController {
   }
 
   @ApiOkResponse({ type: Course })
-  @ApiNotFoundResponse({ description: 'Course was not found!' })
+  @ApiNotFoundResponse({ description: COURSE_NOT_FOUND_MESSAGE })
   @Get('/:courseId')
   async handleGetCourseById(
     @Param('courseId', UUIDValidatorPipe) courseId: string,
@@ -54,14 +55,14 @@ export class CoursesController {
     );
 
     if (courseDbRecord === null) {
-      throw new NotFoundException('Course was not found!');
+      throw COURSE_NOT_FOUND_EXCEPTION;
     }
 
     return mapCourseDbRecordToCourse(courseDbRecord);
   }
 
   @ApiOkResponse({ type: [Lesson] })
-  @ApiNotFoundResponse({ description: 'Course was not found!' })
+  @ApiNotFoundResponse({ description: COURSE_NOT_FOUND_MESSAGE })
   @Get('/:courseId/lessons')
   async handleGetCourseLessons(
     @Param('courseId', UUIDValidatorPipe) courseId: string,
@@ -71,7 +72,7 @@ export class CoursesController {
     );
 
     if (!courseExists) {
-      throw new NotFoundException('Course was not found!');
+      throw COURSE_NOT_FOUND_EXCEPTION;
     }
 
     const courseLessonsDbRecords =
@@ -91,7 +92,7 @@ export class CoursesController {
   }
 
   @ApiOkResponse({ type: Course })
-  @ApiNotFoundResponse({ description: 'Course was not found!' })
+  @ApiNotFoundResponse({ description: COURSE_NOT_FOUND_MESSAGE })
   @Put('/:courseId')
   async handleModifyCourse(
     @Param('courseId', UUIDValidatorPipe)
@@ -104,14 +105,14 @@ export class CoursesController {
     );
 
     if (updatedCourseDbRecord === null) {
-      throw new NotFoundException('Course was not found!');
+      throw COURSE_NOT_FOUND_EXCEPTION;
     }
 
     return mapCourseDbRecordToCourse(updatedCourseDbRecord);
   }
 
   @ApiOkResponse({ type: Course })
-  @ApiNotFoundResponse({ description: 'Course was not found!' })
+  @ApiNotFoundResponse({ description: COURSE_NOT_FOUND_MESSAGE })
   @Delete('/:courseId')
   async handleDeleteCourse(
     @Param('courseId', UUIDValidatorPipe)
@@ -122,7 +123,7 @@ export class CoursesController {
     );
 
     if (deletedCourseDbRecord === null) {
-      throw new NotFoundException('Course was not found!');
+      throw COURSE_NOT_FOUND_EXCEPTION;
     }
 
     return mapCourseDbRecordToCourse(deletedCourseDbRecord);
