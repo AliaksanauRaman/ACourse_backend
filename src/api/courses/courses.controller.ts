@@ -10,8 +10,7 @@ import {
 } from '@nestjs/common';
 
 import { DB_COURSES_SERVICE } from './tokens/db-courses-service.token';
-import { DbCoursesService } from './services/db-courses.service';
-
+import { IDbCoursesService } from './interfaces/db-courses-service.interface';
 import { Endpoint } from '../endpoints';
 import { Course } from './types/course.type';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course.util';
@@ -34,7 +33,7 @@ import { COURSE_NOT_FOUND_EXCEPTION } from './errors/exceptions';
 export class CoursesController {
   constructor(
     @Inject(DB_COURSES_SERVICE)
-    private readonly dbCoursesService: DbCoursesService,
+    private readonly dbCoursesService: IDbCoursesService,
   ) {}
 
   @ApiOkResponse({ type: [Course] })
