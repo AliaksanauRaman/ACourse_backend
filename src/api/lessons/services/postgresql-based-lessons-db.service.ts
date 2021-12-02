@@ -10,7 +10,7 @@ import { LessonDbRecord } from '../types/lesson-db-record.type';
 import { ModifyLessonDto } from '../dtos/modify-lesson.dto';
 
 @Injectable()
-export class DbLessonsService implements IDbLessonsService {
+export class PostgreSQLBasedLessonsDbService implements IDbLessonsService {
   constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
   async selectLessonById(lessonId: string): Promise<LessonDbRecord | null> {
