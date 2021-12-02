@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Inject,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -13,18 +12,30 @@ import {
 import { DB_LESSONS_SERVICE } from './tokens/db-lessons-service.token';
 import { IDbLessonsService } from './interfaces/db-lessons-service.interface';
 import { CreateLessonDto } from './dtos/create-lesson.dto';
+import { Endpoint } from '../endpoints';
 import { Lesson } from './types/lesson.type';
 import { mapLessonDbRecordToLesson } from './utils/map-lesson-db-record-to-lesson.util';
 import { UUIDValidatorPipe } from 'src/shared/pipes/uuid-validator.pipe';
 import { ModifyLessonDto } from './dtos/modify-lesson.dto';
+import {
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { LESSON_NOT_FOUND_MESSAGE } from './errors/messages';
+import { LESSON_NOT_FOUND_EXCEPTION } from './errors/exceptions';
 
-@Controller('api/lessons')
+@ApiTags(Endpoint.LESSONS)
+@Controller(`api/${Endpoint.LESSONS}`)
 export class LessonsController {
   constructor(
     @Inject(DB_LESSONS_SERVICE)
     private readonly dbLessonsService: IDbLessonsService,
   ) {}
 
+  @ApiOkResponse({ type: Lesson })
+  @ApiNotFoundResponse({ description: LESSON_NOT_FOUND_MESSAGE })
   @Get('/:lessonId')
   async handleGetLessonById(
     @Param('lessonId', UUIDValidatorPipe) lessonId: string,
@@ -34,12 +45,13 @@ export class LessonsController {
     );
 
     if (lessonDbRecord === null) {
-      throw new NotFoundException('Lesson was not found!');
+      throw LESSON_NOT_FOUND_EXCEPTION;
     }
 
     return mapLessonDbRecordToLesson(lessonDbRecord);
   }
 
+  @ApiCreatedResponse({ type: Lesson })
   @Post('/')
   async handleCreateLesson(
     @Body() createLessonDto: CreateLessonDto,
@@ -50,6 +62,8 @@ export class LessonsController {
     return mapLessonDbRecordToLesson(insertedLessonDbRecord);
   }
 
+  @ApiOkResponse({ type: Lesson })
+  @ApiNotFoundResponse({ description: LESSON_NOT_FOUND_MESSAGE })
   @Put('/:lessonId')
   async handleModifyLesson(
     @Param('lessonId', UUIDValidatorPipe)
@@ -62,12 +76,14 @@ export class LessonsController {
     );
 
     if (updatedLessonDbRecord === null) {
-      throw new NotFoundException('Lesson was not found!');
+      throw LESSON_NOT_FOUND_EXCEPTION;
     }
 
     return mapLessonDbRecordToLesson(updatedLessonDbRecord);
   }
 
+  @ApiOkResponse({ type: Lesson })
+  @ApiNotFoundResponse({ description: LESSON_NOT_FOUND_MESSAGE })
   @Delete('/:lessonId')
   async handleDeleteLesson(
     @Param('lessonId', UUIDValidatorPipe)
@@ -78,7 +94,7 @@ export class LessonsController {
     );
 
     if (deletedLessonDbRecord === null) {
-      throw new NotFoundException('Lesson was not found!');
+      throw LESSON_NOT_FOUND_EXCEPTION;
     }
 
     return mapLessonDbRecordToLesson(deletedLessonDbRecord);
