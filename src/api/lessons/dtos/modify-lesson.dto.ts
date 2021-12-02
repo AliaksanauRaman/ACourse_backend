@@ -1,5 +1,20 @@
-import { OmitType } from '@nestjs/mapped-types';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { LessonType } from '../types/lesson-type.type';
 
-import { CreateLessonDto } from './create-lesson.dto';
+export class ModifyLessonDto {
+  @ApiProperty({ minLength: 1, maxLength: 60 })
+  @IsString()
+  @IsNotEmpty()
+  readonly title: string;
 
-export class ModifyLessonDto extends OmitType(CreateLessonDto, ['courseId']) {}
+  @ApiProperty({ enum: LessonType })
+  @IsEnum(LessonType)
+  readonly type: LessonType;
+
+  // TODO: Make max field length to 255 in sql
+  @ApiProperty({ minLength: 1, maxLength: 255 })
+  @IsString()
+  @IsNotEmpty()
+  readonly description: string;
+}
