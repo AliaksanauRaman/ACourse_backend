@@ -1,6 +1,6 @@
 import { Factory } from 'fishery';
 import { v4 as uuid } from 'uuid';
-import { CourseDbRecord } from '../../../courses/types/course-db-record.type';
+import { CourseDbRecord } from '../../../api/courses/types/course-db-record.type';
 
 export const courseDbRecordFactory = Factory.define<CourseDbRecord>(() => ({
   id: uuid(),

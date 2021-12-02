@@ -1,9 +1,11 @@
 import { Factory } from 'fishery';
 import { v4 as uuid } from 'uuid';
-import { LectureDbRecord } from '../../../courses/types/lecture-db-record.type';
+import { LessonDbRecord } from '../../../api/lessons/types/lesson-db-record.type';
+import { LessonType } from '../../../api/lessons/types/lesson-type.type';
 
-export const lectureDbRecordFactory = Factory.define<LectureDbRecord>(() => ({
+export const lessonDbRecordFactory = Factory.define<LessonDbRecord>(() => ({
   id: uuid(),
+  type: LessonType.LECTURE,
   course_id: uuid(),
   title: 'Lecture title',
   description: 'Lecture description',
