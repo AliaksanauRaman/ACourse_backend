@@ -9,8 +9,8 @@ import {
   Put,
 } from '@nestjs/common';
 
-import { DB_COURSES_SERVICE } from './tokens/db-courses-service.token';
-import { IDbCoursesService } from './interfaces/db-courses-service.interface';
+import { COURSES_DB_SERVICE } from './tokens/courses-db-service.token';
+import { ICoursesDbService } from './interfaces/courses-db-service.interface';
 import { Endpoint } from '../endpoints';
 import { Course } from './types/course.type';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course.util';
@@ -32,14 +32,14 @@ import { COURSE_NOT_FOUND_EXCEPTION } from './errors/exceptions';
 @Controller(`api/${Endpoint.COURSES}`)
 export class CoursesController {
   constructor(
-    @Inject(DB_COURSES_SERVICE)
-    private readonly dbCoursesService: IDbCoursesService,
+    @Inject(COURSES_DB_SERVICE)
+    private readonly coursesDbService: ICoursesDbService,
   ) {}
 
   @ApiOkResponse({ type: [Course] })
   @Get('/')
   async handleGetAllCourses(): Promise<Array<Course>> {
-    const coursesDbRecords = await this.dbCoursesService.selectAllCourses();
+    const coursesDbRecords = await this.coursesDbService.selectAllCourses();
     return coursesDbRecords.map(mapCourseDbRecordToCourse);
   }
 
@@ -49,7 +49,7 @@ export class CoursesController {
   async handleGetCourseById(
     @Param('courseId', UUIDValidatorPipe) courseId: string,
   ): Promise<Course> {
-    const courseDbRecord = await this.dbCoursesService.selectCourseById(
+    const courseDbRecord = await this.coursesDbService.selectCourseById(
       courseId,
     );
 
@@ -66,7 +66,7 @@ export class CoursesController {
   async handleGetCourseLessons(
     @Param('courseId', UUIDValidatorPipe) courseId: string,
   ): Promise<Array<Lesson>> {
-    const courseExists = await this.dbCoursesService.checkIfCourseExists(
+    const courseExists = await this.coursesDbService.checkIfCourseExists(
       courseId,
     );
 
@@ -75,7 +75,7 @@ export class CoursesController {
     }
 
     const courseLessonsDbRecords =
-      await this.dbCoursesService.selectAllCourseLessons(courseId);
+      await this.coursesDbService.selectAllCourseLessons(courseId);
     return courseLessonsDbRecords.map(mapLessonDbRecordToLesson);
   }
 
@@ -84,7 +84,7 @@ export class CoursesController {
   async handleCreateCourse(
     @Body() createCourseDto: CreateCourseDto,
   ): Promise<Course> {
-    const insertedCourseDbRecord = await this.dbCoursesService.insertCourse(
+    const insertedCourseDbRecord = await this.coursesDbService.insertCourse(
       createCourseDto,
     );
     return mapCourseDbRecordToCourse(insertedCourseDbRecord);
@@ -98,7 +98,7 @@ export class CoursesController {
     courseId: string,
     @Body() modifyCourseDto: ModifyCourseDto,
   ): Promise<Course> {
-    const updatedCourseDbRecord = await this.dbCoursesService.updateCourse(
+    const updatedCourseDbRecord = await this.coursesDbService.updateCourse(
       courseId,
       modifyCourseDto,
     );
@@ -117,7 +117,7 @@ export class CoursesController {
     @Param('courseId', UUIDValidatorPipe)
     courseId: string,
   ): Promise<Course> {
-    const deletedCourseDbRecord = await this.dbCoursesService.deleteCourse(
+    const deletedCourseDbRecord = await this.coursesDbService.deleteCourse(
       courseId,
     );
 

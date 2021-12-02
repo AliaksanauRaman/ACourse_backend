@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
 
-import { IDbCoursesService } from '../interfaces/db-courses-service.interface';
+import { ICoursesDbService } from '../interfaces/courses-db-service.interface';
 import { DB_POOL } from '../../../db/tokens/db-pool.token';
 import {
   COURSES_TABLE_NAME,
@@ -13,7 +13,7 @@ import { ModifyCourseDto } from '../dtos/modify-course.dto';
 import { LessonDbRecord } from '../../lessons/types/lesson-db-record.type';
 
 @Injectable()
-export class PosrgreSQLBasedCoursesDbService implements IDbCoursesService {
+export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
   constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
   async selectAllCourses(): Promise<Array<CourseDbRecord>> {
