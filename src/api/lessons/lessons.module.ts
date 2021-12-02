@@ -4,14 +4,14 @@ import { DbModule } from 'src/db/db.module';
 
 import { LessonsController } from './lessons.controller';
 
-import { DB_LESSONS_SERVICE } from './tokens/db-lessons-service.token';
+import { LESSONS_DB_SERVICE } from './tokens/lessons-db-service.token';
 import { PostgreSQLBasedLessonsDbService } from './services/postgresql-based-lessons-db.service';
 
 @Module({
   imports: [DbModule],
   providers: [
     {
-      provide: DB_LESSONS_SERVICE,
+      provide: LESSONS_DB_SERVICE,
       useClass: PostgreSQLBasedLessonsDbService,
     },
   ],

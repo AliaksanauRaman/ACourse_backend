@@ -4,13 +4,13 @@ import { Pool } from 'pg';
 import { DB_POOL } from '../../../db/tokens/db-pool.token';
 import { LESSONS_TABLE_NAME } from '../../../db/tables-names.constants';
 
-import { IDbLessonsService } from '../interfaces/db-lessons-service.interface';
+import { ILessonsDbService } from '../interfaces/lessons-db-service.interface';
 import { CreateLessonDto } from '../dtos/create-lesson.dto';
 import { LessonDbRecord } from '../types/lesson-db-record.type';
 import { ModifyLessonDto } from '../dtos/modify-lesson.dto';
 
 @Injectable()
-export class PostgreSQLBasedLessonsDbService implements IDbLessonsService {
+export class PostgreSQLBasedLessonsDbService implements ILessonsDbService {
   constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
   async selectLessonById(lessonId: string): Promise<LessonDbRecord | null> {

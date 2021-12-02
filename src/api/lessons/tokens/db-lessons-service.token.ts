@@ -1,1 +1,0 @@
-export const DB_LESSONS_SERVICE = 'DB_LESSONS_SERVICE';

@@ -9,8 +9,8 @@ import {
   Put,
 } from '@nestjs/common';
 
-import { DB_LESSONS_SERVICE } from './tokens/db-lessons-service.token';
-import { IDbLessonsService } from './interfaces/db-lessons-service.interface';
+import { LESSONS_DB_SERVICE } from './tokens/lessons-db-service.token';
+import { ILessonsDbService } from './interfaces/lessons-db-service.interface';
 import { CreateLessonDto } from './dtos/create-lesson.dto';
 import { Endpoint } from '../endpoints';
 import { Lesson } from './types/lesson.type';
@@ -30,8 +30,8 @@ import { LESSON_NOT_FOUND_EXCEPTION } from './errors/exceptions';
 @Controller(`api/${Endpoint.LESSONS}`)
 export class LessonsController {
   constructor(
-    @Inject(DB_LESSONS_SERVICE)
-    private readonly dbLessonsService: IDbLessonsService,
+    @Inject(LESSONS_DB_SERVICE)
+    private readonly lessonsDbService: ILessonsDbService,
   ) {}
 
   @ApiOkResponse({ type: Lesson })
@@ -40,7 +40,7 @@ export class LessonsController {
   async handleGetLessonById(
     @Param('lessonId', UUIDValidatorPipe) lessonId: string,
   ): Promise<Lesson> {
-    const lessonDbRecord = await this.dbLessonsService.selectLessonById(
+    const lessonDbRecord = await this.lessonsDbService.selectLessonById(
       lessonId,
     );
 
@@ -56,7 +56,7 @@ export class LessonsController {
   async handleCreateLesson(
     @Body() createLessonDto: CreateLessonDto,
   ): Promise<Lesson> {
-    const insertedLessonDbRecord = await this.dbLessonsService.insertLesson(
+    const insertedLessonDbRecord = await this.lessonsDbService.insertLesson(
       createLessonDto,
     );
     return mapLessonDbRecordToLesson(insertedLessonDbRecord);
@@ -70,7 +70,7 @@ export class LessonsController {
     lessonId: string,
     @Body() modifyLessonDto: ModifyLessonDto,
   ): Promise<Lesson> {
-    const updatedLessonDbRecord = await this.dbLessonsService.updateLesson(
+    const updatedLessonDbRecord = await this.lessonsDbService.updateLesson(
       lessonId,
       modifyLessonDto,
     );
@@ -89,7 +89,7 @@ export class LessonsController {
     @Param('lessonId', UUIDValidatorPipe)
     lessonId: string,
   ): Promise<Lesson> {
-    const deletedLessonDbRecord = await this.dbLessonsService.deleteLesson(
+    const deletedLessonDbRecord = await this.lessonsDbService.deleteLesson(
       lessonId,
     );
 
