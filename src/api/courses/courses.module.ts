@@ -5,14 +5,14 @@ import { DbModule } from '../../db/db.module';
 import { CoursesController } from './courses.controller';
 
 import { DB_COURSES_SERVICE } from './tokens/db-courses-service.token';
-import { DbCoursesService } from './services/db-courses.service';
+import { PosrgreSQLBasedCoursesDbService } from './services/postgresql-based-courses-db.service';
 
 @Module({
   imports: [DbModule],
   providers: [
     {
       provide: DB_COURSES_SERVICE,
-      useClass: DbCoursesService,
+      useClass: PosrgreSQLBasedCoursesDbService,
     },
   ],
   controllers: [CoursesController],

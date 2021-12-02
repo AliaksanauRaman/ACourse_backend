@@ -13,7 +13,7 @@ import { ModifyCourseDto } from '../dtos/modify-course.dto';
 import { LessonDbRecord } from '../../lessons/types/lesson-db-record.type';
 
 @Injectable()
-export class DbCoursesService implements IDbCoursesService {
+export class PosrgreSQLBasedCoursesDbService implements IDbCoursesService {
   constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
   async selectAllCourses(): Promise<Array<CourseDbRecord>> {
