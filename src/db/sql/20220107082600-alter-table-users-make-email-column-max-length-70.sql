@@ -1,0 +1,2 @@
+ALTER TABLE public.users
+ALTER COLUMN email TYPE VARCHAR(70);
