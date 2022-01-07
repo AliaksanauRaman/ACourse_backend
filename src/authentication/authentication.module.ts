@@ -9,6 +9,7 @@ import { UsersModule } from '../users/users.module';
 import { AuthenticationService } from './authentication.service';
 import { CredentialsStrategy } from './strategies/credentials.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { AuthenticationController } from './authentication.controller';
 
 @Module({
   providers: [
@@ -35,6 +36,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       inject: [ConfigService],
     }),
   ],
-  exports: [AuthenticationService],
+  controllers: [AuthenticationController],
 })
 export class AuthenticationModule {}
