@@ -6,9 +6,18 @@ import { LessonsModule } from './api/lessons/lessons.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthenticationModule } from './authentication/authentication.module';
+
+import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({}), CoursesModule, LessonsModule],
+  imports: [
+    ConfigModule.forRoot({}),
+    AuthenticationModule,
+    CoursesModule,
+    LessonsModule,
+    UsersModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
