@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { DbModule } from 'src/db/db.module';
+import { DbModule } from '../../modules/db/db.module';
 
 import { LessonsController } from './lessons.controller';
 
