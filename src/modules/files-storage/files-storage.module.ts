@@ -23,4 +23,4 @@ import { FilesStorageService } from './files-storage.service';
   providers: [FilesStorageService],
   controllers: [],
 })
-export class StorageModule {}
+export class FilesStorageModule {}
