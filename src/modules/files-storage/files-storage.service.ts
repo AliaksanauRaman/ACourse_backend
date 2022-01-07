@@ -5,7 +5,7 @@ import { InjectS3 } from 'nestjs-s3';
 type AvailableBucket = 'acourse-lectrues-files';
 
 @Injectable()
-export class StorageService {
+export class FilesStorageService {
   constructor(@InjectS3() private readonly s3: S3) {}
 
   async saveLectureFile(fileId: string, fileBuffer: Buffer): Promise<string> {
