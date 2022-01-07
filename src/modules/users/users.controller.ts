@@ -1,7 +1,7 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 
-import { ENCRYPTION_SERVICE } from '../core/tokens/encryption-service.token';
-import { IEncryptionService } from '../core/interfaces/encryption-service.interface';
+import { ENCRYPTION_SERVICE } from '../../core/tokens/encryption-service.token';
+import { IEncryptionService } from '../../core/interfaces/encryption-service.interface';
 
 import { UsersDbService } from './users-db.service';
 import { CreateUserDto } from './dtos/create-user.dto';

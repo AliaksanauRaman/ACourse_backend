@@ -5,7 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { BcryptEncryptionService } from '../core/services/bcrypt-encryption.service';
 import { ENCRYPTION_SERVICE } from '../core/tokens/encryption-service.token';
-import { UsersModule } from '../users/users.module';
+import { UsersModule } from '../modules/users/users.module';
 import { AuthenticationService } from './authentication.service';
 import { CredentialsStrategy } from './strategies/credentials.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
