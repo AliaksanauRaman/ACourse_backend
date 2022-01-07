@@ -11,7 +11,7 @@ import {
 
 import { COURSES_DB_SERVICE } from './tokens/courses-db-service.token';
 import { ICoursesDbService } from './interfaces/courses-db-service.interface';
-import { Endpoint } from '../../api/endpoints';
+import { Endpoint } from '../../constants/endpoints';
 import { Course } from './types/course.type';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course.util';
 import { UUIDValidatorPipe } from 'src/shared/pipes/uuid-validator.pipe';
