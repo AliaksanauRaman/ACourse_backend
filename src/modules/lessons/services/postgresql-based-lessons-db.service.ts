@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
 
-import { DB_POOL } from '../../../modules/db/tokens/db-pool.token';
-import { LESSONS_TABLE_NAME } from '../../../modules/db/tables-names.constants';
+import { DB_POOL } from '../../db/tokens/db-pool.token';
+import { LESSONS_TABLE_NAME } from '../../db/tables-names.constants';
 
 import { ILessonsDbService } from '../interfaces/lessons-db-service.interface';
 import { CreateLessonDto } from '../dtos/create-lesson.dto';
