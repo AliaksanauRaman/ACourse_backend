@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
 
-import { DB_POOL } from '../db/tokens/db-pool.token';
-import { USERS_TABLE_NAME } from '../db/tables-names.constants';
+import { DB_POOL } from '../../db/tokens/db-pool.token';
+import { USERS_TABLE_NAME } from '../../db/tables-names.constants';
 
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserDbRecordWithoutPassword } from './types/user-db-record-without-password.type';

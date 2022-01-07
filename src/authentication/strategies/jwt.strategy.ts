@@ -3,9 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { UserWithoutPassword } from '../../users/types/user-without-password.type';
-import { UsersDbService } from '../../users/users-db.service';
-import { mapUserDbRecordWithoutPasswordToUser } from '../../users/utils/map-user-db-record-without-password-to-user';
+import { UserWithoutPassword } from '../../modules/users/types/user-without-password.type';
+import { UsersDbService } from '../../modules/users/users-db.service';
+import { mapUserDbRecordWithoutPasswordToUser } from '../../modules/users/utils/map-user-db-record-without-password-to-user';
 
 import { JwtPayload } from '../types/jwt-payload.type';
 

@@ -2,8 +2,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 
-import { UserWithoutPassword } from '../../users/types/user-without-password.type';
-import { mapUserDbRecordWithoutPasswordToUser } from '../../users/utils/map-user-db-record-without-password-to-user';
+import { UserWithoutPassword } from '../../modules/users/types/user-without-password.type';
+import { mapUserDbRecordWithoutPasswordToUser } from '../../modules/users/utils/map-user-db-record-without-password-to-user';
 
 import { AuthenticationService } from '../authentication.service';
 
