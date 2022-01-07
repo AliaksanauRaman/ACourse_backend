@@ -1,8 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { ENCRYPTION_SERVICE } from '../../core/tokens/encryption-service.token';
-import { IEncryptionService } from '../../core/interfaces/encryption-service.interface';
+import {
+  ENCRYPTION_SERVICE,
+  IEncryptionService,
+} from '../../shared/services/encryption';
 
 import { UserDbRecordWithoutPassword } from '../users/types/user-db-record-without-password.type';
 import { UsersDbService } from '../users/users-db.service';

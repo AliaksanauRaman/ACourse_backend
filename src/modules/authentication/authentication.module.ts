@@ -3,8 +3,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-import { BcryptEncryptionService } from '../../core/services/bcrypt-encryption.service';
-import { ENCRYPTION_SERVICE } from '../../core/tokens/encryption-service.token';
+import {
+  ENCRYPTION_SERVICE,
+  BcryptEncryptionService,
+} from '../../shared/services/encryption';
+
 import { UsersModule } from '../users/users.module';
 import { AuthenticationService } from './authentication.service';
 import { CredentialsStrategy } from './strategies/credentials.strategy';
