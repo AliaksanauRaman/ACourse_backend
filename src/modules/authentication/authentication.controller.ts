@@ -1,7 +1,7 @@
 import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 
-import { UserWithoutPassword } from '../modules/users/types/user-without-password.type';
-import { User } from '../shared/decorators/user.decorator';
+import { UserWithoutPassword } from '../users/types/user-without-password.type';
+import { User } from '../../shared/decorators/user.decorator';
 
 import { AuthenticationService } from './authentication.service';
 import { CredentialsAuthenticationGuard } from './guards/credentials-authentication.guard';
