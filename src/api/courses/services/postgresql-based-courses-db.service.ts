@@ -2,11 +2,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
 
 import { ICoursesDbService } from '../interfaces/courses-db-service.interface';
-import { DB_POOL } from '../../../db/tokens/db-pool.token';
+import { DB_POOL } from '../../../modules/db/tokens/db-pool.token';
 import {
   COURSES_TABLE_NAME,
   LESSONS_TABLE_NAME,
-} from '../../../db/tables-names.constants';
+} from '../../../modules/db/tables-names.constants';
 import { CourseDbRecord } from '../types/course-db-record.type';
 import { CreateCourseDto } from '../dtos/create-course.dto';
 import { ModifyCourseDto } from '../dtos/modify-course.dto';
