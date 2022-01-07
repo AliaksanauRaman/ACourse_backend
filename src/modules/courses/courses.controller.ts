@@ -11,12 +11,12 @@ import {
 
 import { COURSES_DB_SERVICE } from './tokens/courses-db-service.token';
 import { ICoursesDbService } from './interfaces/courses-db-service.interface';
-import { Endpoint } from '../endpoints';
+import { Endpoint } from '../../api/endpoints';
 import { Course } from './types/course.type';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course.util';
 import { UUIDValidatorPipe } from 'src/shared/pipes/uuid-validator.pipe';
-import { Lesson } from '../lessons/types/lesson.type';
-import { mapLessonDbRecordToLesson } from '../lessons/utils/map-lesson-db-record-to-lesson.util';
+import { Lesson } from '../../api/lessons/types/lesson.type';
+import { mapLessonDbRecordToLesson } from '../../api/lessons/utils/map-lesson-db-record-to-lesson.util';
 import { CreateCourseDto } from './dtos/create-course.dto';
 import { ModifyCourseDto } from './dtos/modify-course.dto';
 import {

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { AuthenticationModule } from './modules/authentication/authentication.module';
-import { CoursesModule } from './api/courses/courses.module';
+import { CoursesModule } from './modules/courses/courses.module';
 import { LessonsModule } from './api/lessons/lessons.module';
 import { UsersModule } from './modules/users/users.module';
 

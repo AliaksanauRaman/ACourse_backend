@@ -1,6 +1,6 @@
 import { CreateCourseDto } from '../dtos/create-course.dto';
 import { ModifyCourseDto } from '../dtos/modify-course.dto';
-import { LessonDbRecord } from '../../lessons/types/lesson-db-record.type';
+import { LessonDbRecord } from '../../../api/lessons/types/lesson-db-record.type';
 import { CourseDbRecord } from '../types/course-db-record.type';
 
 export interface ICoursesDbService {
