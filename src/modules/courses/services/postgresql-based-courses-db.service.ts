@@ -12,6 +12,7 @@ import { CourseDbRecord } from '../types/course-db-record.type';
 import { CreateCourseDto } from '../dtos/create-course.dto';
 import { ModifyCourseDto } from '../dtos/modify-course.dto';
 import { LessonDbRecord } from '../../lessons/types/lesson-db-record.type';
+import { UsersCourseDbRecord } from '../types/users_course-db-record.type';
 
 @Injectable()
 export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
@@ -76,27 +77,19 @@ export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
       .then(({ rows }) => rows);
   }
 
-  async insertCourse(
+  async createCourseConnectedToUserAndReturnIt(
     createCourseDto: CreateCourseDto,
+    courseCreatorId: number,
   ): Promise<CourseDbRecord> {
-    return this.dbPool
-      .query<CourseDbRecord>(
-        `
-          INSERT INTO "${COURSES_TABLE_NAME}" (
-            title,
-            description,
-            want_to_improve
-          )
-          VALUES ($1, $2, $3)
-          RETURNING *;
-        `,
-        [
-          createCourseDto.title,
-          createCourseDto.description,
-          createCourseDto.wantToImprove,
-        ],
-      )
-      .then(({ rows: [createdCourse] }) => createdCourse);
+    const insertedCourseDbRecord = await this.insertCourseAndReturnIt(
+      createCourseDto,
+      courseCreatorId,
+    );
+    await this.insertUserCourseConnectionAndReturnIt(
+      courseCreatorId,
+      insertedCourseDbRecord.id,
+    );
+    return insertedCourseDbRecord;
   }
 
   async updateCourse(
@@ -180,5 +173,50 @@ export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
         [courseId, lessonId],
       )
       .then(({ rows: [{ exists }] }) => exists);
+  }
+
+  private async insertCourseAndReturnIt(
+    createCourseDto: CreateCourseDto,
+    creatorId: number,
+  ): Promise<CourseDbRecord> {
+    return this.dbPool
+      .query<CourseDbRecord>(
+        `
+          INSERT INTO "${COURSES_TABLE_NAME}" (
+            title,
+            description,
+            want_to_improve,
+            creator_id
+          )
+          VALUES ($1, $2, $3, $4)
+          RETURNING *;
+        `,
+        [
+          createCourseDto.title,
+          createCourseDto.description,
+          createCourseDto.wantToImprove,
+          creatorId,
+        ],
+      )
+      .then(({ rows: [insertedDbRecord] }) => insertedDbRecord);
+  }
+
+  private insertUserCourseConnectionAndReturnIt(
+    userId: number,
+    courseId: string,
+  ): Promise<UsersCourseDbRecord> {
+    return this.dbPool
+      .query<UsersCourseDbRecord>(
+        `
+        INSERT INTO "${DbTableName.USERS_COURSES}" (
+          user_id,
+          course_id
+        )
+        VALUES ($1, $2)
+        RETURNING *;
+      `,
+        [userId, courseId],
+      )
+      .then(({ rows: [insertedDbRecord] }) => insertedDbRecord);
   }
 }
