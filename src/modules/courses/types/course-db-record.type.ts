@@ -1,8 +1,9 @@
-export type CourseDbRecord = {
-  readonly id: string;
-  readonly title: string;
-  readonly description: string;
-  readonly want_to_improve: boolean;
-  readonly created_at: Date;
-  readonly modified_at: Date;
-};
+export type CourseDbRecord = Readonly<{
+  id: string;
+  title: string;
+  description: string;
+  want_to_improve: boolean;
+  creator_id: number;
+  created_at: Date;
+  modified_at: Date;
+}>;
