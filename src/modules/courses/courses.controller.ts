@@ -31,7 +31,6 @@ import { COURSE_NOT_FOUND_EXCEPTION } from './errors/exceptions';
 import { JwtAuthenticationGuard } from '../authentication/guards/jwt-authentication.guard';
 import { UserWithoutPassword } from '../users/types/user-without-password.type';
 
-@UseGuards(JwtAuthenticationGuard)
 @ApiTags(Endpoint.COURSES)
 @Controller(`api/${Endpoint.COURSES}`)
 export class CoursesController {
@@ -40,6 +39,7 @@ export class CoursesController {
     private readonly coursesDbService: ICoursesDbService,
   ) {}
 
+  @UseGuards(JwtAuthenticationGuard)
   @ApiOkResponse({ type: [Course] })
   @Get('/')
   async handleGetUserCourses(
