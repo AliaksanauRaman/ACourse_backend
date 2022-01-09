@@ -7,14 +7,15 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
-
 import { COURSES_DB_SERVICE } from './tokens/courses-db-service.token';
 import { ICoursesDbService } from './interfaces/courses-db-service.interface';
 import { Endpoint } from '../../constants/endpoints';
 import { Course } from './types/course.type';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course.util';
-import { UUIDValidatorPipe } from 'src/shared/pipes/uuid-validator.pipe';
+import { UUIDValidatorPipe } from '../../shared/pipes/uuid-validator.pipe';
+import { User } from '../../shared/decorators/user.decorator';
 import { Lesson } from '../lessons/types/lesson.type';
 import { mapLessonDbRecordToLesson } from '../lessons/utils/map-lesson-db-record-to-lesson.util';
 import { CreateCourseDto } from './dtos/create-course.dto';
@@ -27,6 +28,8 @@ import {
 } from '@nestjs/swagger';
 import { COURSE_NOT_FOUND_MESSAGE } from './errors/messages';
 import { COURSE_NOT_FOUND_EXCEPTION } from './errors/exceptions';
+import { JwtAuthenticationGuard } from '../authentication/guards/jwt-authentication.guard';
+import { UserWithoutPassword } from '../users/types/user-without-password.type';
 
 @ApiTags(Endpoint.COURSES)
 @Controller(`api/${Endpoint.COURSES}`)
@@ -36,10 +39,15 @@ export class CoursesController {
     private readonly coursesDbService: ICoursesDbService,
   ) {}
 
+  @UseGuards(JwtAuthenticationGuard)
   @ApiOkResponse({ type: [Course] })
   @Get('/')
-  async handleGetAllCourses(): Promise<Array<Course>> {
-    const coursesDbRecords = await this.coursesDbService.selectAllCourses();
+  async handleGetUserCourses(
+    @User() user: UserWithoutPassword,
+  ): Promise<Array<Course>> {
+    const coursesDbRecords = await this.coursesDbService.selectUserCourses(
+      user.id,
+    );
     return coursesDbRecords.map(mapCourseDbRecordToCourse);
   }
 

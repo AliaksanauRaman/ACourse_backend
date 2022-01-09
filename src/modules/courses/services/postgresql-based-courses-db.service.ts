@@ -5,6 +5,7 @@ import { ICoursesDbService } from '../interfaces/courses-db-service.interface';
 import { DB_POOL } from '../../db/tokens/db-pool.token';
 import {
   COURSES_TABLE_NAME,
+  DbTableName,
   LESSONS_TABLE_NAME,
 } from '../../db/tables-names.constants';
 import { CourseDbRecord } from '../types/course-db-record.type';
@@ -16,15 +17,27 @@ import { LessonDbRecord } from '../../lessons/types/lesson-db-record.type';
 export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
   constructor(@Inject(DB_POOL) private readonly dbPool: Pool) {}
 
-  async selectAllCourses(): Promise<Array<CourseDbRecord>> {
+  async selectUserCourses(userId: number): Promise<Array<CourseDbRecord>> {
     return this.dbPool
       .query<CourseDbRecord>(
         `
           SELECT
-            *
+            "${COURSES_TABLE_NAME}"."id",
+            "${COURSES_TABLE_NAME}"."title",
+            "${COURSES_TABLE_NAME}"."description",
+            "${COURSES_TABLE_NAME}"."want_to_improve",
+            "${COURSES_TABLE_NAME}"."created_at",
+            "${COURSES_TABLE_NAME}"."modified_at"
           FROM
-            "${COURSES_TABLE_NAME}";
+            "${COURSES_TABLE_NAME}"
+          INNER JOIN
+            "${DbTableName.USERS_COURSES}"
+          ON
+            "${COURSES_TABLE_NAME}"."id" = "${DbTableName.USERS_COURSES}"."course_id"
+          WHERE
+            "${DbTableName.USERS_COURSES}"."user_id" = $1
         `,
+        [userId],
       )
       .then(({ rows }) => rows);
   }
