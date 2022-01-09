@@ -7,6 +7,7 @@ export const courseDbRecordFactory = Factory.define<CourseDbRecord>(() => ({
   title: 'Course title',
   description: 'Course description',
   want_to_improve: false,
+  creator_id: 1,
   created_at: new Date(),
   modified_at: new Date(),
 }));

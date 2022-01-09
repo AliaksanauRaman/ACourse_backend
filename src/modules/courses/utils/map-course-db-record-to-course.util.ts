@@ -8,6 +8,7 @@ export const mapCourseDbRecordToCourse = (
   title: dbRecord.title,
   description: dbRecord.description,
   wantToImprove: dbRecord.want_to_improve,
+  creatorId: dbRecord.creator_id,
   createdAt: dbRecord.created_at,
   modifiedAt: dbRecord.modified_at,
 });

@@ -87,15 +87,19 @@ export class CoursesController {
     return courseLessonsDbRecords.map(mapLessonDbRecordToLesson);
   }
 
+  @UseGuards(JwtAuthenticationGuard)
   @ApiCreatedResponse({ type: Course })
   @Post('/')
   async handleCreateCourse(
+    @User() user: UserWithoutPassword,
     @Body() createCourseDto: CreateCourseDto,
   ): Promise<Course> {
-    const insertedCourseDbRecord = await this.coursesDbService.insertCourse(
-      createCourseDto,
-    );
-    return mapCourseDbRecordToCourse(insertedCourseDbRecord);
+    const createdCourseDbRecord =
+      await this.coursesDbService.createCourseConnectedToUserAndReturnIt(
+        createCourseDto,
+        user.id,
+      );
+    return mapCourseDbRecordToCourse(createdCourseDbRecord);
   }
 
   @ApiOkResponse({ type: Course })

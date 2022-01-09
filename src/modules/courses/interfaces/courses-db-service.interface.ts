@@ -7,7 +7,10 @@ export interface ICoursesDbService {
   selectUserCourses(userId: number): Promise<Array<CourseDbRecord>>;
   selectCourseById(courseId: string): Promise<CourseDbRecord | null>;
   selectAllCourseLessons(courseId: string): Promise<Array<LessonDbRecord>>;
-  insertCourse(createCourseDto: CreateCourseDto): Promise<CourseDbRecord>;
+  createCourseConnectedToUserAndReturnIt(
+    createCourseDto: CreateCourseDto,
+    courseCreatorId: number,
+  ): Promise<CourseDbRecord>;
   deleteCourse(courseId: string): Promise<CourseDbRecord | null>;
   updateCourse(
     courseId: string,

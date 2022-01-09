@@ -14,6 +14,9 @@ export class Course {
   readonly wantToImprove: boolean;
 
   @ApiProperty()
+  readonly creatorId: number;
+
+  @ApiProperty()
   readonly createdAt: Date;
 
   @ApiProperty()
