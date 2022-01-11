@@ -5,24 +5,27 @@ import { UserInputLimitation } from '../../../constants/user-input-limitation';
 
 export class CreateUserDto {
   @ApiProperty({
+    default: 'John',
     minLength: 1,
     maxLength: UserInputLimitation.FIRST_NAME_MAX_LENGTH,
   })
   @IsString()
   @IsNotEmpty()
   @MaxLength(UserInputLimitation.FIRST_NAME_MAX_LENGTH)
-  readonly first_name: string;
+  readonly firstName: string;
 
   @ApiProperty({
+    default: 'Snow',
     minLength: 1,
     maxLength: UserInputLimitation.LAST_NAME_MAX_LENGTH,
   })
   @IsString()
   @IsNotEmpty()
   @MaxLength(UserInputLimitation.LAST_NAME_MAX_LENGTH)
-  readonly last_name: string;
+  readonly lastName: string;
 
   @ApiProperty({
+    default: 'john.snow@gmail.com',
     minLength: 1,
     maxLength: UserInputLimitation.EMAIL_MAX_LENGTH,
   })
@@ -33,6 +36,7 @@ export class CreateUserDto {
   readonly email: string;
 
   @ApiProperty({
+    default: 'kingofthenorth',
     minLength: 1,
     maxLength: UserInputLimitation.PASSWORD_MAX_LENGTH,
   })

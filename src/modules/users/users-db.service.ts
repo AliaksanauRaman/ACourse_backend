@@ -72,8 +72,8 @@ export class UsersDbService {
         RETURNING id, first_name, last_name, email, created_at, modified_at;
       `,
         [
-          createUserDto.first_name,
-          createUserDto.last_name,
+          createUserDto.firstName,
+          createUserDto.lastName,
           createUserDto.email,
           createUserDto.password,
         ],
