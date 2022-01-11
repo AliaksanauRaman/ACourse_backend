@@ -18,6 +18,8 @@ export const setupSwagger = (app: INestApplication): void =>
         .setVersion(SWAGGER_VERSION)
         .addTag(Endpoint.COURSES)
         .addTag(Endpoint.LESSONS)
+        .addTag(Endpoint.AUTHENTICATION)
+        .addBearerAuth()
         .build(),
     ),
   );
