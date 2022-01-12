@@ -8,7 +8,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
-import { Endpoint } from '../../constants/endpoints';
+import { Endpoint } from '../../constants/endpoint';
 import { UserWithoutPassword } from '../users/types/user-without-password.type';
 import { User } from '../../shared/decorators/user.decorator';
 

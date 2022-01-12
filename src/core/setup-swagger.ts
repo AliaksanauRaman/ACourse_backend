@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
-import { Endpoint } from '../constants/endpoints';
+import { Endpoint } from '../constants/endpoint';
 
 const SWAGGER_URL = '/swagger';
 const SWAGGER_TITLE = 'ACourse API';
