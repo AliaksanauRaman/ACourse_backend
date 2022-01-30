@@ -51,6 +51,7 @@ export class CoursesController {
     return coursesDbRecords.map(mapCourseDbRecordToCourse);
   }
 
+  @UseGuards(JwtAuthenticationGuard)
   @ApiOkResponse({ type: Course })
   @ApiNotFoundResponse({ description: COURSE_NOT_FOUND_MESSAGE })
   @Get('/:courseId/with-lessons-previews')
