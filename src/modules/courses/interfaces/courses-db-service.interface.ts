@@ -1,14 +1,16 @@
 import { CreateCourseDto } from '../dtos/create-course.dto';
 import { ModifyCourseDto } from '../dtos/modify-course.dto';
 import { CourseDbRecord } from '../types/course-db-record.type';
-import { LessonPreview } from '../../lessons/types/lesson-preview.type';
+import { LessonPreviewDbRecord } from '../../lessons/types/lesson-preview-db-record.type';
 
 export const COURSES_DB_SERVICE = Symbol('COURSES_DB_SERVICE');
 
 export interface ICoursesDbService {
   selectUserCourses(userId: number): Promise<Array<CourseDbRecord>>;
   getCourseById(courseId: string): Promise<CourseDbRecord>;
-  getCourseLessonsPreviews(courseId: string): Promise<Array<LessonPreview>>;
+  getCourseLessonsPreviews(
+    courseId: string,
+  ): Promise<Array<LessonPreviewDbRecord>>;
   createCourseConnectedToUserAndReturnIt(
     createCourseDto: CreateCourseDto,
     courseCreatorId: number,

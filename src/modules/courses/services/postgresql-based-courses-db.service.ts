@@ -12,7 +12,7 @@ import { CourseDbRecord } from '../types/course-db-record.type';
 import { CreateCourseDto } from '../dtos/create-course.dto';
 import { ModifyCourseDto } from '../dtos/modify-course.dto';
 import { UsersCourseDbRecord } from '../types/users-course-db-record.type';
-import { LessonPreview } from '../../lessons/types/lesson-preview.type';
+import { LessonPreviewDbRecord } from '../../lessons/types/lesson-preview-db-record.type';
 
 @Injectable()
 export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
@@ -75,17 +75,17 @@ export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
 
   async getCourseLessonsPreviews(
     courseId: string,
-  ): Promise<Array<LessonPreview>> {
+  ): Promise<Array<LessonPreviewDbRecord>> {
     return this.dbPool
-      .query<LessonPreview>(
+      .query<LessonPreviewDbRecord>(
         `
           SELECT
             id,
             title,
             type,
             description,
-            created_at AS createdAt,
-            modified_at AS modifiedAt
+            created_at,
+            modified_at
           FROM
             "${LESSONS_TABLE_NAME}"
           WHERE
