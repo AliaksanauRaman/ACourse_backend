@@ -43,7 +43,7 @@ export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
       .then(({ rows }) => rows);
   }
 
-  async selectCourseById(courseId: string): Promise<CourseDbRecord | null> {
+  async getCoursePreviewById(courseId: string): Promise<CourseDbRecord | null> {
     return this.dbPool
       .query<CourseDbRecord>(
         `

@@ -60,7 +60,7 @@ export class CoursesController {
   async handleGetCourseWithLessonsPreviews(
     @Param('courseId', UUIDValidatorPipe) courseId: string,
   ): Promise<Course> {
-    const courseDbRecord = await this.coursesDbService.selectCourseById(
+    const courseDbRecord = await this.coursesDbService.getCoursePreviewById(
       courseId,
     );
 
