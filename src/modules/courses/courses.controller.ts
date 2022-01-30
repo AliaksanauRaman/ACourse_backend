@@ -9,8 +9,10 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { COURSES_DB_SERVICE } from './tokens/courses-db-service.token';
-import { ICoursesDbService } from './interfaces/courses-db-service.interface';
+import {
+  ICoursesDbService,
+  COURSES_DB_SERVICE,
+} from './interfaces/courses-db-service.interface';
 import { Endpoint } from '../../constants/endpoint';
 import { Course } from './types/course.type';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course.util';

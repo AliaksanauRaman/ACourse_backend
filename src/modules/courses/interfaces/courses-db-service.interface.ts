@@ -3,6 +3,8 @@ import { ModifyCourseDto } from '../dtos/modify-course.dto';
 import { LessonDbRecord } from '../../lessons/types/lesson-db-record.type';
 import { CourseDbRecord } from '../types/course-db-record.type';
 
+export const COURSES_DB_SERVICE = Symbol('COURSES_DB_SERVICE');
+
 export interface ICoursesDbService {
   selectUserCourses(userId: number): Promise<Array<CourseDbRecord>>;
   selectCourseById(courseId: string): Promise<CourseDbRecord | null>;

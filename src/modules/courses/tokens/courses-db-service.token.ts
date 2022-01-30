@@ -1,1 +1,0 @@
-export const COURSES_DB_SERVICE = 'COURSES_DB_SERVICE';

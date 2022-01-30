@@ -4,7 +4,7 @@ import { DbModule } from '../db/db.module';
 
 import { CoursesController } from './courses.controller';
 
-import { COURSES_DB_SERVICE } from './tokens/courses-db-service.token';
+import { COURSES_DB_SERVICE } from './interfaces/courses-db-service.interface';
 import { PosrgreSQLBasedCoursesDbService } from './services/postgresql-based-courses-db.service';
 
 @Module({
