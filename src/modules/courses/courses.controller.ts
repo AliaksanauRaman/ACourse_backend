@@ -86,7 +86,7 @@ export class CoursesController {
     }
 
     const courseLessonsDbRecords =
-      await this.coursesDbService.selectAllCourseLessons(courseId);
+      await this.coursesDbService.getCourseLessonsPreviews(courseId);
     return courseLessonsDbRecords.map(mapLessonDbRecordToLesson);
   }
 

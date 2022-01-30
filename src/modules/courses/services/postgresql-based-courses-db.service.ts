@@ -67,7 +67,7 @@ export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
       });
   }
 
-  async selectAllCourseLessons(
+  async getCourseLessonsPreviews(
     courseId: string,
   ): Promise<Array<LessonDbRecord>> {
     return this.dbPool
