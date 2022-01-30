@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Pool } from 'pg';
 
 import { ICoursesDbService } from '../interfaces/courses-db-service.interface';
@@ -11,8 +11,8 @@ import {
 import { CourseDbRecord } from '../types/course-db-record.type';
 import { CreateCourseDto } from '../dtos/create-course.dto';
 import { ModifyCourseDto } from '../dtos/modify-course.dto';
-import { LessonDbRecord } from '../../lessons/types/lesson-db-record.type';
-import { UsersCourseDbRecord } from '../types/users_course-db-record.type';
+import { UsersCourseDbRecord } from '../types/users-course-db-record.type';
+import { LessonPreviewDbRecord } from '../../lessons/types/lesson-preview-db-record.type';
 
 @Injectable()
 export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
@@ -43,30 +43,50 @@ export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
       .then(({ rows }) => rows);
   }
 
-  async selectCourseById(courseId: string): Promise<CourseDbRecord | null> {
+  async getCourseById(courseId: string): Promise<CourseDbRecord> {
     return this.dbPool
       .query<CourseDbRecord>(
         `
           SELECT
-            *
+            id,
+            title,
+            description,
+            want_to_improve,
+            creator_id,
+            created_at,
+            modified_at
           FROM
             "${COURSES_TABLE_NAME}"
           WHERE id=$1
-          FETCH FIRST ROW ONLY;
+          LIMIT 1;
         `,
         [courseId],
       )
-      .then(({ rowCount, rows }) => (rowCount === 1 ? rows[0] : null));
+      .then(({ rowCount, rows }) => {
+        if (rowCount === 1) {
+          return rows[0];
+        }
+
+        // TODO: Investigate further for possible better options
+        throw new NotFoundException(
+          `Course with id '${courseId}' is not found!`,
+        );
+      });
   }
 
-  async selectAllCourseLessons(
+  async getCourseLessonsPreviews(
     courseId: string,
-  ): Promise<Array<LessonDbRecord>> {
+  ): Promise<Array<LessonPreviewDbRecord>> {
     return this.dbPool
-      .query<LessonDbRecord>(
+      .query<LessonPreviewDbRecord>(
         `
           SELECT
-            *
+            id,
+            title,
+            type,
+            description,
+            created_at,
+            modified_at
           FROM
             "${LESSONS_TABLE_NAME}"
           WHERE

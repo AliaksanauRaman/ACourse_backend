@@ -9,15 +9,15 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { COURSES_DB_SERVICE } from './tokens/courses-db-service.token';
-import { ICoursesDbService } from './interfaces/courses-db-service.interface';
+import {
+  ICoursesDbService,
+  COURSES_DB_SERVICE,
+} from './interfaces/courses-db-service.interface';
 import { Endpoint } from '../../constants/endpoint';
 import { Course } from './types/course.type';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course.util';
 import { UUIDValidatorPipe } from '../../shared/pipes/uuid-validator.pipe';
 import { User } from '../../shared/decorators/user.decorator';
-import { Lesson } from '../lessons/types/lesson.type';
-import { mapLessonDbRecordToLesson } from '../lessons/utils/map-lesson-db-record-to-lesson.util';
 import { CreateCourseDto } from './dtos/create-course.dto';
 import { ModifyCourseDto } from './dtos/modify-course.dto';
 import {
@@ -30,6 +30,10 @@ import { COURSE_NOT_FOUND_MESSAGE } from './errors/messages';
 import { COURSE_NOT_FOUND_EXCEPTION } from './errors/exceptions';
 import { JwtAuthenticationGuard } from '../authentication/guards/jwt-authentication.guard';
 import { UserWithoutPassword } from '../users/types/user-without-password.type';
+import {
+  COURSES_SERVICE,
+  ICoursesService,
+} from './interfaces/courses-service.interface';
 
 @ApiTags(Endpoint.COURSES)
 @Controller(`api/${Endpoint.COURSES}`)
@@ -37,6 +41,8 @@ export class CoursesController {
   constructor(
     @Inject(COURSES_DB_SERVICE)
     private readonly coursesDbService: ICoursesDbService,
+    @Inject(COURSES_SERVICE)
+    private readonly coursesService: ICoursesService,
   ) {}
 
   @UseGuards(JwtAuthenticationGuard)
@@ -51,40 +57,14 @@ export class CoursesController {
     return coursesDbRecords.map(mapCourseDbRecordToCourse);
   }
 
+  @UseGuards(JwtAuthenticationGuard)
   @ApiOkResponse({ type: Course })
   @ApiNotFoundResponse({ description: COURSE_NOT_FOUND_MESSAGE })
-  @Get('/:courseId')
-  async handleGetCourseById(
+  @Get('/:courseId/with-lessons-previews')
+  async handleGetCourseWithLessonsPreviews(
     @Param('courseId', UUIDValidatorPipe) courseId: string,
   ): Promise<Course> {
-    const courseDbRecord = await this.coursesDbService.selectCourseById(
-      courseId,
-    );
-
-    if (courseDbRecord === null) {
-      throw COURSE_NOT_FOUND_EXCEPTION;
-    }
-
-    return mapCourseDbRecordToCourse(courseDbRecord);
-  }
-
-  @ApiOkResponse({ type: [Lesson] })
-  @ApiNotFoundResponse({ description: COURSE_NOT_FOUND_MESSAGE })
-  @Get('/:courseId/lessons')
-  async handleGetCourseLessons(
-    @Param('courseId', UUIDValidatorPipe) courseId: string,
-  ): Promise<Array<Lesson>> {
-    const courseExists = await this.coursesDbService.checkIfCourseExists(
-      courseId,
-    );
-
-    if (!courseExists) {
-      throw COURSE_NOT_FOUND_EXCEPTION;
-    }
-
-    const courseLessonsDbRecords =
-      await this.coursesDbService.selectAllCourseLessons(courseId);
-    return courseLessonsDbRecords.map(mapLessonDbRecordToLesson);
+    return this.coursesService.getCourseWithLessonsPreviews(courseId);
   }
 
   @UseGuards(JwtAuthenticationGuard)
