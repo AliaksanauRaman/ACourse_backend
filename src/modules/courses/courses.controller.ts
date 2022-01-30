@@ -18,8 +18,6 @@ import { Course } from './types/course.type';
 import { mapCourseDbRecordToCourse } from './utils/map-course-db-record-to-course.util';
 import { UUIDValidatorPipe } from '../../shared/pipes/uuid-validator.pipe';
 import { User } from '../../shared/decorators/user.decorator';
-import { Lesson } from '../lessons/types/lesson.type';
-import { mapLessonDbRecordToLesson } from '../lessons/utils/map-lesson-db-record-to-lesson.util';
 import { CreateCourseDto } from './dtos/create-course.dto';
 import { ModifyCourseDto } from './dtos/modify-course.dto';
 import {
@@ -69,25 +67,6 @@ export class CoursesController {
     }
 
     return mapCourseDbRecordToCourse(courseDbRecord);
-  }
-
-  @ApiOkResponse({ type: [Lesson] })
-  @ApiNotFoundResponse({ description: COURSE_NOT_FOUND_MESSAGE })
-  @Get('/:courseId/lessons')
-  async handleGetCourseLessons(
-    @Param('courseId', UUIDValidatorPipe) courseId: string,
-  ): Promise<Array<Lesson>> {
-    const courseExists = await this.coursesDbService.checkIfCourseExists(
-      courseId,
-    );
-
-    if (!courseExists) {
-      throw COURSE_NOT_FOUND_EXCEPTION;
-    }
-
-    const courseLessonsDbRecords =
-      await this.coursesDbService.getCourseLessonsPreviews(courseId);
-    return courseLessonsDbRecords.map(mapLessonDbRecordToLesson);
   }
 
   @UseGuards(JwtAuthenticationGuard)
