@@ -53,8 +53,8 @@ export class CoursesController {
 
   @ApiOkResponse({ type: Course })
   @ApiNotFoundResponse({ description: COURSE_NOT_FOUND_MESSAGE })
-  @Get('/:courseId')
-  async handleGetCourseById(
+  @Get('/:courseId/with-lessons-previews')
+  async handleGetCourseWithLessonsPreviews(
     @Param('courseId', UUIDValidatorPipe) courseId: string,
   ): Promise<Course> {
     const courseDbRecord = await this.coursesDbService.selectCourseById(
