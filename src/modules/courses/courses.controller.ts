@@ -30,6 +30,10 @@ import { COURSE_NOT_FOUND_MESSAGE } from './errors/messages';
 import { COURSE_NOT_FOUND_EXCEPTION } from './errors/exceptions';
 import { JwtAuthenticationGuard } from '../authentication/guards/jwt-authentication.guard';
 import { UserWithoutPassword } from '../users/types/user-without-password.type';
+import {
+  COURSES_SERVICE,
+  ICoursesService,
+} from './interfaces/courses-service.interface';
 
 @ApiTags(Endpoint.COURSES)
 @Controller(`api/${Endpoint.COURSES}`)
@@ -37,6 +41,8 @@ export class CoursesController {
   constructor(
     @Inject(COURSES_DB_SERVICE)
     private readonly coursesDbService: ICoursesDbService,
+    @Inject(COURSES_SERVICE)
+    private readonly coursesService: ICoursesService,
   ) {}
 
   @UseGuards(JwtAuthenticationGuard)
@@ -58,13 +64,7 @@ export class CoursesController {
   async handleGetCourseWithLessonsPreviews(
     @Param('courseId', UUIDValidatorPipe) courseId: string,
   ): Promise<Course> {
-    const courseDbRecord = await this.coursesDbService.getCourseById(courseId);
-
-    if (courseDbRecord === null) {
-      throw COURSE_NOT_FOUND_EXCEPTION;
-    }
-
-    return mapCourseDbRecordToCourse(courseDbRecord);
+    return this.coursesService.getCourseWithLessonsPreviews(courseId);
   }
 
   @UseGuards(JwtAuthenticationGuard)
