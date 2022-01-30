@@ -67,6 +67,7 @@ export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
           return rows[0];
         }
 
+        // TODO: Investigate further for possible better options
         throw new NotFoundException(
           `Course with id '${courseId}' is not found!`,
         );
