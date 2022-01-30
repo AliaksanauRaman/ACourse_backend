@@ -55,7 +55,7 @@ export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
             want_to_improve AS wantToImprove,
             creator_id AS creatorId,
             created_at AS createdAt,
-            moditied_at AS modifiedAt
+            modified_at AS modifiedAt
           FROM
             "${COURSES_TABLE_NAME}"
           WHERE id=$1
