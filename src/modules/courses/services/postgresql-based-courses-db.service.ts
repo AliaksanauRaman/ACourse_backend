@@ -12,7 +12,7 @@ import { CourseDbRecord } from '../types/course-db-record.type';
 import { CreateCourseDto } from '../dtos/create-course.dto';
 import { ModifyCourseDto } from '../dtos/modify-course.dto';
 import { LessonDbRecord } from '../../lessons/types/lesson-db-record.type';
-import { UsersCourseDbRecord } from '../types/users_course-db-record.type';
+import { UsersCourseDbRecord } from '../types/users-course-db-record.type';
 
 @Injectable()
 export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
