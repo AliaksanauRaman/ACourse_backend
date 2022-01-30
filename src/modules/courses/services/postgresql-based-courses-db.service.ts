@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Pool } from 'pg';
 
 import { ICoursesDbService } from '../interfaces/courses-db-service.interface';
@@ -43,7 +43,7 @@ export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
       .then(({ rows }) => rows);
   }
 
-  async getCoursePreviewById(courseId: string): Promise<CourseDbRecord | null> {
+  async getCoursePreviewById(courseId: string): Promise<CourseDbRecord> {
     return this.dbPool
       .query<CourseDbRecord>(
         `
@@ -56,7 +56,15 @@ export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
         `,
         [courseId],
       )
-      .then(({ rowCount, rows }) => (rowCount === 1 ? rows[0] : null));
+      .then(({ rowCount, rows }) => {
+        if (rowCount === 1) {
+          return rows[0];
+        }
+
+        throw new NotFoundException(
+          `Course with id '${courseId}' is not found!`,
+        );
+      });
   }
 
   async selectAllCourseLessons(
