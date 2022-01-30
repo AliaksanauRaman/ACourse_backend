@@ -13,7 +13,6 @@ import { CreateCourseDto } from '../dtos/create-course.dto';
 import { ModifyCourseDto } from '../dtos/modify-course.dto';
 import { UsersCourseDbRecord } from '../types/users-course-db-record.type';
 import { LessonPreview } from '../../lessons/types/lesson-preview.type';
-import { Course } from '../types/course.type';
 
 @Injectable()
 export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
@@ -44,18 +43,18 @@ export class PosrgreSQLBasedCoursesDbService implements ICoursesDbService {
       .then(({ rows }) => rows);
   }
 
-  async getCourseById(courseId: string): Promise<Course> {
+  async getCourseById(courseId: string): Promise<CourseDbRecord> {
     return this.dbPool
-      .query<Course>(
+      .query<CourseDbRecord>(
         `
           SELECT
             id,
             title,
             description,
-            want_to_improve AS wantToImprove,
-            creator_id AS creatorId,
-            created_at AS createdAt,
-            modified_at AS modifiedAt
+            want_to_improve,
+            creator_id,
+            created_at,
+            modified_at
           FROM
             "${COURSES_TABLE_NAME}"
           WHERE id=$1
