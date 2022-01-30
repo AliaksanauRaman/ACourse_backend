@@ -1,16 +1,16 @@
-import { converFromSnakeCaseToCamelCase } from '../../../shared/utils/convert-from-snake-case-to-camel-case';
+import { convertFromSnakeCaseToCamelCase } from '../../../shared/utils/convert-from-snake-case-to-camel-case';
 import { courseDbRecordFactory } from '../../tools/factories/course-db-record.factory';
 import { lessonDbRecordFactory } from '../../tools/factories/lecture-db-record.factory';
 import { Course } from '../../../modules/courses/types/course.type';
 import { Lesson } from '../../../modules/lessons/types/lesson.type';
 
-describe('converFromSnakeCaseToCamelCase util', () => {
+describe('convertFromSnakeCaseToCamelCase util', () => {
   test('should properly convert a course db record', () => {
     // Arrange
     const courseDbRecord = courseDbRecordFactory.build();
 
     // Act
-    const course = converFromSnakeCaseToCamelCase<Course>(courseDbRecord);
+    const course = convertFromSnakeCaseToCamelCase<Course>(courseDbRecord);
 
     // Assert
     expect(course).toEqual<Course>({
@@ -29,7 +29,7 @@ describe('converFromSnakeCaseToCamelCase util', () => {
     const lessonDbRecord = lessonDbRecordFactory.build();
 
     // Act
-    const lesson = converFromSnakeCaseToCamelCase<Lesson>(lessonDbRecord);
+    const lesson = convertFromSnakeCaseToCamelCase<Lesson>(lessonDbRecord);
 
     // Assert
     expect(lesson).toEqual<Lesson>({

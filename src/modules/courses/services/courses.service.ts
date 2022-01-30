@@ -6,7 +6,7 @@ import {
 } from '../interfaces/courses-db-service.interface';
 import { ICoursesService } from '../interfaces/courses-service.interface';
 import { CourseWithLessonsPreviews } from '../types/course-with-lessons-previews.type';
-import { converFromSnakeCaseToCamelCase } from '../../../shared/utils/convert-from-snake-case-to-camel-case';
+import { convertFromSnakeCaseToCamelCase } from '../../../shared/utils/convert-from-snake-case-to-camel-case';
 import { LessonPreview } from '../../lessons/types/lesson-preview.type';
 
 @Injectable()
@@ -23,9 +23,9 @@ export class CoursesService implements ICoursesService {
     const lessonPreviewsDbRecords =
       await this.coursesDbService.getCourseLessonsPreviews(courseId);
     return {
-      ...converFromSnakeCaseToCamelCase(courseDbRecord),
+      ...convertFromSnakeCaseToCamelCase(courseDbRecord),
       lessonsPreviews: lessonPreviewsDbRecords.map((dbRecord) =>
-        converFromSnakeCaseToCamelCase<LessonPreview>(dbRecord),
+        convertFromSnakeCaseToCamelCase<LessonPreview>(dbRecord),
       ),
     };
   }
