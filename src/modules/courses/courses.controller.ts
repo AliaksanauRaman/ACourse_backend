@@ -58,9 +58,7 @@ export class CoursesController {
   async handleGetCourseWithLessonsPreviews(
     @Param('courseId', UUIDValidatorPipe) courseId: string,
   ): Promise<Course> {
-    const courseDbRecord = await this.coursesDbService.getCoursePreviewById(
-      courseId,
-    );
+    const courseDbRecord = await this.coursesDbService.getCourseById(courseId);
 
     if (courseDbRecord === null) {
       throw COURSE_NOT_FOUND_EXCEPTION;

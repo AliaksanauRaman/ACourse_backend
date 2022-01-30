@@ -8,7 +8,7 @@ export const COURSES_DB_SERVICE = Symbol('COURSES_DB_SERVICE');
 
 export interface ICoursesDbService {
   selectUserCourses(userId: number): Promise<Array<CourseDbRecord>>;
-  getCoursePreviewById(courseId: string): Promise<CoursePreview>;
+  getCourseById(courseId: string): Promise<CoursePreview>;
   getCourseLessonsPreviews(courseId: string): Promise<Array<LessonPreview>>;
   createCourseConnectedToUserAndReturnIt(
     createCourseDto: CreateCourseDto,
